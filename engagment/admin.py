@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Engagment
 
-# Register your models here.
+
+admin.site.register(Engagment)
