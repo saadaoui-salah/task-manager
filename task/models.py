@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class TaskGroup(models.Model):
-    preparer = models.ForeignKey(User, limit_choices_to={'is_staff':True, 'is_admin':False}, on_delete=models.CASCADE) 
+    preparer = models.ForeignKey(User, limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
     name     = models.CharField("Name", max_length=100)
 
     def __str__(self):
