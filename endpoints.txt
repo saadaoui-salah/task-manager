@@ -1,0 +1,44 @@
+1- /api/user/login
+   type: POST
+   data : pass, user
+   response : token
+
+2- /api/user/egagment-listing/<int:id>
+   type : GET
+   data : token, page_id
+   response : eng_id, egagment_name
+   
+3- /api/user/search?keyword=<str:email>
+   type: GET
+   data : token
+   response: user_id, user_name
+   
+4- /api/user/create-new-engagment
+   type : POST
+   data : token || egagment_name, [user_id, ...], report_date
+   response: success, error
+   
+5- /api/engagment/<int:eng_id>/tasks
+   type : GET
+   data : token
+   response: {task_group_id, task_group_name, [task_id, task, date]}
+   
+6- /api/engagment/<int:eng_id>/tasks/<int:task_id>
+   type: GET
+   data : token
+   response: description, name, complete, files
+   
+7- /api/engagment/<int:eng_id>/evidence/upload
+   type: GET
+   data : token
+   response: file
+   
+8- /api/engagment/<int:eng_id>/evidence/create
+   type : POST
+   data : ???????
+   
+9- /api/engagment/<int:eng_id>/evidence/all
+   type : GET
+   data : token
+   response: file_name, preparer, reviewer
+   
