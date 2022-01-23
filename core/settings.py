@@ -50,6 +50,15 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -82,9 +91,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

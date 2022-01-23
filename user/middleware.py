@@ -17,7 +17,8 @@ class IsAuthenticatedMiddleware:
         return False, None
     def __call__(self, request, *args, **kwargs):
         url = request.get_full_path()
-        if url == '/api/user/login':
+        print(url)
+        if url == '/api/user/login/':
             return self.get_response(request)
         elif url[0:7] == '/admin/':
             return self.get_response(request)
