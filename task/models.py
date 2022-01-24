@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class TaskGroup(models.Model):
     user_create = models.ForeignKey(User, limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
     name        = models.CharField(max_length=100)
@@ -25,7 +24,7 @@ class Task(models.Model):
     
 
 class UploadedEvidence(models.Model):
-    task     = models.ForeignKey(Task, on_delete=models.CASCADE)
+    engagment = models.ForeignKey('engagment.Engagment', on_delete=models.CASCADE)
     name     = models.CharField(max_length=100)
     file     = models.FileField(upload_to="tasks_files", max_length=100) 
     note     = models.TextField()
@@ -34,7 +33,7 @@ class UploadedEvidence(models.Model):
 
 class BuildinEvidence(models.Model):
     name     = models.CharField(max_length=50)   
-    task     = models.ForeignKey(Task, on_delete=models.CASCADE)
+    engagment = models.ForeignKey('engagment.Engagment', on_delete=models.CASCADE)
     preparer = models.ForeignKey(User, related_name="buildin_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
     reviewer = models.ForeignKey(User, related_name="buildin_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, on_delete=models.CASCADE)
 

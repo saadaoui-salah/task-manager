@@ -4,7 +4,6 @@ from .models import Engagment
 from rest_framework.pagination import PageNumberPagination
 from .serializer import EngagmentListSerializer, EngagmentSerializer
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
 from rest_framework import authentication
 
 class StandardResultsSetPagination(PageNumberPagination):
