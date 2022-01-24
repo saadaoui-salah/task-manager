@@ -16,3 +16,4 @@ jobs:
           heroku_app_name: "task-manager-api-f" #Must be unique in Heroku
           heroku_email: ${{ secrets.EMAIL }}
           usedocker: true
+          healthcheck: "https://task-manager-api-f.herokuapp.com/health"
