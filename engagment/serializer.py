@@ -5,3 +5,8 @@ class EngagmentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Engagment
         fields = ('id', 'name',)
+
+class EngagmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Engagment
+        fields = ('id', 'name', 'report_date', 'invited_members')

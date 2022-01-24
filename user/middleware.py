@@ -17,15 +17,14 @@ class IsAuthenticatedMiddleware:
         return False, None
     def __call__(self, request, *args, **kwargs):
         url = request.get_full_path()
-        print(url)
-        if url == '/api/user/login/':
-            return self.get_response(request)
-        elif url[0:7] == '/admin/':
-            return self.get_response(request)
-        else:
+        if url[0:5] == '/api/':
+            if url == '/api/user/login/':
+                return self.get_response(request)
             token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
             validated, user = self.validate(token)
             request.user = user
             request.is_authenticated = validated
             response = self.get_response(request)
             return response
+        else:
+            return self.get_response(request)

@@ -2,7 +2,6 @@
    type: POST
    data : pass, user
    response : token
-####### DONE ############
 
 2- /api/user/egagment-listing/<int:id>
    type : GET
@@ -13,7 +12,6 @@
    type: GET
    data : token
    response: user_id, user_name
-####### DONE ############
    
 4- /api/user/create-new-engagment
    type : POST
@@ -29,18 +27,19 @@
    type: GET
    data : token
    response: description, name, complete, files
-   
-7- /api/engagment/<int:eng_id>/evidence/upload
-   type: GET
-   data : token
-   response: file
-   
-8- /api/engagment/<int:eng_id>/evidence/create
-   type : POST
-   data : ???????
+####### DONE ############
    
 9- /api/engagment/<int:eng_id>/evidence/all
    type : GET
    data : token
    response: file_name, preparer, reviewer
    
+7- /api/engagment/<int:eng_id>/evidence/upload
+   type: POST
+   data : token
+   response: file
+   
+   
+8- /api/engagment/<int:eng_id>/evidence/create
+   type : POST
+   data : ???????
