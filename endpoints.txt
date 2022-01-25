@@ -1,45 +1,46 @@
-1- /api/user/login   
+URL = https://task-manager-api-f.herokuapp.com
+1- /api/user/login/   
    type: POST
-   data : pass, user
+   data : password, user
    response : token
 
-2- /api/user/egagment-listing/<int:id>
+2- /api/engagment/egagment-listing/<int:id>
    type : GET
    data : token, page_id
    response : eng_id, egagment_name
    
-3- /api/user/search?keyword=<str:email>
+3- /api/user/search/keyword=<str:keyword>/
    type: GET
    data : token
    response: user_id, user_name
    
-4- /api/user/create-new-engagment
+4- /api/engagment/create-new-engagment/
    type : POST
    data : token || egagment_name, [user_id, ...], report_date
    response: success, error
    
-5- /api/engagment/<int:eng_id>/tasks
+5- /api/user/engagment/<int:eng_id>/tasks
    type : GET
    data : token
    response: {task_group_id, task_group_name, [task_id, task, date]}
    
-6- /api/engagment/<int:eng_id>/tasks/<int:task_id>
+6- /api/user/engagment/<int:eng_id>/tasks/<int:task_id>
    type: GET
    data : token
    response: description, name, complete, files
    
-9- /api/engagment/<int:eng_id>/evidence/all
+9- /api/user/engagment/<int:eng_id>/evidence/all
    type : GET
    data : token
    response: file_name, preparer, reviewer
    
-7- /api/engagment/<int:eng_id>/evidence/upload
+7- /api/user/engagment/<int:eng_id>/evidence/upload
    type: POST
    data : token
    response: file
    
    
-8- /api/engagment/<int:eng_id>/evidence/create
+8- /api/user/engagment/<int:eng_id>/evidence/create
    type : POST
-   data : ???????
+   data : name, engagment_id, content, preparer, reviewer
 #######  DONE ############

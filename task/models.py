@@ -34,10 +34,6 @@ class UploadedEvidence(models.Model):
 class BuildinEvidence(models.Model):
     name     = models.CharField(max_length=50)   
     engagment = models.ForeignKey('engagment.Engagment', on_delete=models.CASCADE)
+    content   = models.TextField()
     preparer = models.ForeignKey(User, related_name="buildin_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
     reviewer = models.ForeignKey(User, related_name="buildin_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, on_delete=models.CASCADE)
-
-class Section(models.Model):
-    evidence  = models.ForeignKey(BuildinEvidence, on_delete=models.CASCADE)
-    name      = models.CharField(max_length=100)
-    content   = models.TextField()

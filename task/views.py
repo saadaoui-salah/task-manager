@@ -45,6 +45,7 @@ class CreateEvidenceApiView(APIView):
             reviewer = User.objects.filter(id=request.POST['reviewer']).get()
             evidence = BuildinEvidence.objects.create(
                 name=request.POST['name'],
+                content=request.POST['content'],
                 engagment=engagment,
                 preparer=preparer,
                 reviewer=reviewer,
