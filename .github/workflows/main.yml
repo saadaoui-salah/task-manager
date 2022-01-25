@@ -16,4 +16,4 @@ jobs:
           heroku_app_name: "task-manager-api-f"
           heroku_email: ${{ secrets.EMAIL }}
           procfile: "web: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT"
-          healthcheck: "https://task-manager-api-f.herokuapp.com/admin"
+          healthcheck: "https://task-manager-api-f.herokuapp.com/api/user/healthy/"

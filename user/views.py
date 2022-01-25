@@ -32,3 +32,9 @@ class SearchUserView(APIView):
             users = User.objects.filter(Q(username__contains=keyword) | Q(email__contains=keyword)).values_list('id', 'username')  
             return Response({'users': list(users), 'errors':''})
         return Response({'users': '', 'errors':'user not authenticated'})
+
+
+
+class HealthyView(APIView):
+    def get(self, request):
+        return Response({'HEALTHY':'GOOOD'})
