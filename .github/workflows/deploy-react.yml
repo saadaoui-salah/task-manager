@@ -15,6 +15,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "task-managment-project"
           heroku_email: ${{ secrets.EMAIL }}
-          appdir: "frontend"
+          appdir: "build"
       - run: yarn global add serve
       - run: npx serve -s build
