@@ -15,4 +15,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "task-managment-project"
           heroku_email: ${{ secrets.EMAIL }}
+          buildpack: "https://buildpack-registry.s3.amazonaws.com/buildpacks/mars/create-react-app.tgz"
           appdir: "frontend"
