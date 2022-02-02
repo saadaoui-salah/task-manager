@@ -16,4 +16,4 @@ jobs:
           heroku_app_name: "task-managment-project"
           heroku_email: ${{ secrets.EMAIL }}
           appdir: "frontend"
-          buildpack: "https://github.com/mars/create-react-app-buildpack"
+          usedocker: true
