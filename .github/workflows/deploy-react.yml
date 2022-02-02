@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy React App
 
 on:
   push:
@@ -16,4 +16,5 @@ jobs:
           heroku_app_name: "task-managment-project"
           heroku_email: ${{ secrets.EMAIL }}
           appdir: "frontend"
-          usedocker: true
+      - run: yarn global add serve
+      - run: npx serve -s build
