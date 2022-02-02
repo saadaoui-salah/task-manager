@@ -1,0 +1,35 @@
+.App {
+  text-align: center;
+  height: 100vh;
+  margin: 0; 
+  padding: 0; 
+}
+
+@media (min-width:600px){
+  .css-15j2ewu{
+    margin-left:24px;
+    margin-right: 0px !important;
+    width:calc(100% - 240px);}
+}
+.css-ckhlm2-MuiTabs-root{
+  margin-bottom: 0!important;
+}
+
+.triangle-up {
+	width: 0;
+	height: 0;
+	border-left: 45px solid transparent;
+	border-top: 45px solid transparent;
+	border-bottom: 45px solid #2e2e38;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.css-15v22id-MuiAccordionDetails-root{
+  padding: 0px!important;  
+}
+
+.css-14yr603-MuiStepContent-root{
+  margin: 0!important;
+  padding: 0!important;
+}
