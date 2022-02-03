@@ -12,16 +12,15 @@ import Task from './Task/Task';
 import TablePagination from '@mui/material/TablePagination';
 import { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { ListTasksByEngagment } from '../../../../api';
 
 
-
-const TaskListingByGroup = ({ getTaskId }) => {
+const TaskListingByGroup = () => {
     const [taskListData, setTaskListData] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        fetch('./taskListData.json')
-            .then(res => res.json())
-            .then(data => setTaskListData(data))
+    useEffect(async () => {
+        setTaskListData(await ListTasksByEngagment(2))
     }, [])
 
     // For Changing Tabs----------------------
@@ -112,14 +111,13 @@ const TaskListingByGroup = ({ getTaskId }) => {
 
                 {/* ----------Task with accordion---------- */}
                 <Box sx={{ pl: { xs: 2, sm: 0 }, position: 'static', textAlign: 'center' }}>
-                    {!taskListData
+                    {isLoading
                         ? <Box sx={{ display: 'flex', mx: 'auto', py: 18 }}>
                             <CircularProgress sx={{ mx: 'auto' }} />
                         </Box>
-                        : taskListData.map(taskData => <Task
+                        : taskListData?.map(taskData => <Task
                             key={taskData.id}
                             taskData={taskData}
-                            getTaskId={getTaskId}
                         />)
                     }
                 </Box>

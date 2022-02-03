@@ -9,6 +9,7 @@ import TaskListingByGroup from './TaskListingByGroup/TaskListingByGroup';
 import { useState } from 'react';
 import TaskDetails from './TaskDetails/TaskDetails';
 import CircularProgress from '@mui/material/CircularProgress';
+import { GetTask } from '../../../api';
 
 
 
@@ -22,26 +23,16 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-const TaskListMainContents = () => {
-    const [taskListData, setTaskListData] = useState(null)
+const TaskListMainContents = ({taskID}) => {
     const [taskDetails, setTaskDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     // Get Task _id form the Task.js file and find same task in DB--------------
-    const getTaskId = (taskPriId, _id) => {
-        setIsLoading(true)
-        fetch('./taskListData.json')
-            .then(res => res.json())
-            .then(data => {
-                setTaskListData(data)
-                setIsLoading(false)
-            })
-        if (taskListData) {
-            const findTaskPrifix = taskListData.find(task => task.id === taskPriId)
-            const findSingleTask = findTaskPrifix.tasks.find(singleTask => singleTask._id === _id)
-            setTaskDetails(findSingleTask)
-        }
-    }
+    useEffect(async () => {
+        setIsLoading(false)
+        setTaskDetails(await GetTask(taskID))
+        setIsLoading(false)
+    },[])    
 
     return (
         <Box sx={{ m: 0, p: 0, mt: { xs: 7, sm: 0 }, height: '100%', }}>
@@ -52,7 +43,7 @@ const TaskListMainContents = () => {
                     '&.MuiGrid-root': { p: 0, }, position: 'relative',
                     height: { xs: 'auto', lg: 950 },
                 }}>
-                    <TaskListingByGroup getTaskId={getTaskId} />
+                    <TaskListingByGroup />
                 </Grid>
 
 

@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
 
-const Task = ({ taskData, getTaskId }) => {
+const Task = ({ taskData }) => {
     const { id, title, tasks } = taskData;
     const { date, discription, type, _id } = tasks;
 
@@ -36,8 +36,7 @@ const Task = ({ taskData, getTaskId }) => {
             <AccordionDetails sx={{ position: 'static' }}>
                 {tasks.map(singleTask =>
                     <Box div key={singleTask._id}>
-                        <Grid container spacing={2} sx={{ p: 1, cursor: 'pointer' }}
-                            onClick={() => getTaskId(id, singleTask._id)}>
+                        <Grid container spacing={2} sx={{ p: 1, cursor: 'pointer' }}>
 
                             <Grid item xs={2} sx={{ m: 0, p: 0, textAlign: 'left' }}>
                                 <Box>

@@ -36,7 +36,6 @@ const LogIn = () => {
         event.preventDefault();
     };
 
-    // const [userToken, setUserToken] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setIsloading] = useState(false)
 

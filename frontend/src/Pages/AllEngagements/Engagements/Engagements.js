@@ -7,7 +7,7 @@ import StarPurple500Icon from '@mui/icons-material/StarPurple500';
 
 
 const Engagements = ({ engagement }) => {
-    const { id, type, date } = engagement;
+    const { id, name, date } = engagement;
 
     return (
         <Box sx={{
@@ -21,7 +21,7 @@ const Engagements = ({ engagement }) => {
             }}>
                 <Box sx={{ textAlign: 'left' }}>
                     <Typography sx={{ fontWeight: 500 }}>
-                        {type} [{date}]
+                        {name} [{date}]
                     </Typography>
 
                     <Typography sx={{ fontWeight: 800, my: 1, }}>

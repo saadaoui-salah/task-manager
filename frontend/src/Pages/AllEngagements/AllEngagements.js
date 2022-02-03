@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import Engagements from './Engagements/Engagements';
+import { ListEngagment } from '../../api'
+
 
 const tabStyle = {
     default_tab: {
@@ -26,16 +28,11 @@ const tabStyle = {
     }
 };
 
-const engagementsData = [
-    { id: 1, type: 'IMPORT COMMERCIAL', date: '31.12.2021', },
-    { id: 2, type: 'IMPORT EXPORT COMMERCIAL', date: '12.10.2021', },
-]
-
-
-
-
-
 const AllEngagements = () => {
+    const token = localStorage.getItem('token');
+    if (token === null && !token) {
+        console.log('not auth')
+    } 
     const [value, setValue] = React.useState(0);
     const [alignment, setAlignment] = React.useState('list');
 
@@ -60,14 +57,12 @@ const AllEngagements = () => {
         setPage(0);
     };
 
+    let engagements;
 
-    /* 
-        useEffect(() => {
-            fetch('https://task-manager-api-f.herokuapp.com/api/engagment/egagment-listing/<int:2>')
-                .then(res => res.json())
-                .then(data => console.log(data))
+    useEffect(async ()=> {
+        engagements = await ListEngagment()
+    },[])
     
-        }, []) */
 
 
     return (
@@ -159,7 +154,7 @@ const AllEngagements = () => {
 
 
             <Box sx={{ py: 5, mx: { xs: 1, sm: 5 }, display: 'flex', flexDirection: 'column' }}>
-                {engagementsData.map(engagement => <Engagements
+                {engagements?.map(engagement => <Engagements
                     key={engagement.id}
                     engagement={engagement}
                 />)
