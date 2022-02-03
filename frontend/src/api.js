@@ -7,7 +7,7 @@ const Get = async (path) => {
     await fetch(BASE_URL + path, {
         method: 'GET',
         headers: {
-            'content-type': 'applivation/json',
+            'content-type': 'application/json',
             'Authorization': `bareer ${token}`
         }
     })
@@ -23,7 +23,7 @@ const Post = async (data, path) => {
     await fetch(BASE_URL + path, {
         method: 'POST',
         headers: {
-            'content-type': 'applivation/json',
+            'content-type': 'application/json',
             'Authorization': `bareer ${token}`
         },
         body: JSON.stringify(data)
