@@ -34,9 +34,9 @@ const Post = async (data, path) => {
     return response
 }
 
-export const ListEngagment = (engagmentId) => {
-    return Get(`/engagment/egagment-listing/${engagmentId}/`) 
-}
+export const ListEngagment= () => {
+    return Get(`/engagment/egagment-listing/`) 
+}//done
 
 export const UserSearch = (keyword) => {
     return Get(`/user/search/keyword/${keyword}/`) 
@@ -48,15 +48,15 @@ export const CreateEngagment = (data) => {
 
 export const Login = (data) => {
     return Post(data, '/user/login/') 
-}
+}// done
 
-export const useListEngagmentByTask = (engagmentID) => {
+export const ListTasksByEngagment = (engagmentID) => {
     return Get(`/user/engagment/${engagmentID}/tasks/`) 
-}
+} // done
 
 export const GetTask = (engagmentID, taskID) => {
     return Get(`/user/engagment/${engagmentID}/tasks/${taskID}/`) 
-}
+} // done
 
 export const ListEvidence = (engagmentID) => {
     return Get(`/user/engagment/${engagmentID}/evidence/all/`) 
