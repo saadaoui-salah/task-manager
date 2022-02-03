@@ -2,7 +2,8 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('engagment/<int:eng_id>/tasks/', EngagmentByTasksApiView.as_view()),
+    path('engagment/<int:group_id>/tasks/', TaskByTaskGroupApiView.as_view()),
+    path('engagment/<int:eng_id>/task-group/', TaskGroupByEngagmentApiView.as_view()),
     path('engagment/<int:eng_id>/tasks/<int:task_id>/', TasksApiView.as_view()),
     path('engagment/evidence/upload/', UploadEvidenceApiView.as_view()),
     path('engagment/evidence/create/', CreateEvidenceApiView.as_view()),

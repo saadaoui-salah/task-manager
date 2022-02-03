@@ -30,7 +30,8 @@ const TaskListMainContents = ({engagmentID, taskID}) => {
     // Get Task _id form the Task.js file and find same task in DB--------------
     useEffect(async () => {
         setIsLoading(false)
-        setTaskDetails(await GetTask(engagmentID, taskID))
+        const response = await GetTask(3, 1)
+        setTaskDetails(response.data)
         setIsLoading(false)
     },[])    
 

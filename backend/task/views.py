@@ -2,17 +2,24 @@ from django.shortcuts import render
 from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import TaskSerializer, UploadedEvidenceSerializer, BuildinEvidenceSerializer
-from .models import Task, UploadedEvidence, BuildinEvidence
+from .models import *
 from rest_framework import authentication
 from django.contrib.auth.models import User
 from engagment.models import Engagment
 
-class EngagmentByTasksApiView(APIView):
+class TaskByTaskGroupApiView(APIView):
+    def get(self, request, group_id):
+        if request.is_authenticated:
+            queryset   =  Task.objects.filter(task_group__id=group_id)
+            serializer = TaskSerializer(queryset, many=True)
+            return Response({'data':serializer.data, 'error':''})        
+        return Response({'data':[], 'error':'user not authenticated'})
+
+class TaskGroupByEngagmentApiView(APIView):
     def get(self, request, eng_id):
         if request.is_authenticated:
-            queryset   =  Task.objects.filter(task_group__engagment__id=eng_id)
-            serializer = TaskSerializer(queryset, many=True)
+            queryset   =  TaskGroup.objects.filter(task_group__engagment__id=eng_id)
+            serializer = TaskGroupSerializer(queryset, many=True)
             return Response({'data':serializer.data, 'error':''})        
         return Response({'data':[], 'error':'user not authenticated'})
 

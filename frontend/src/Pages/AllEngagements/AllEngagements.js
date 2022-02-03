@@ -57,12 +57,14 @@ const AllEngagements = () => {
         setPage(0);
     };
 
-    let engagements;
+    const [results, setResults] = React.useState([])
+    const [count, setCount] = React.useState()
 
     useEffect(async ()=> {
-        engagements = await ListEngagment()
+        const response = await ListEngagment()
+        setResults(response.results)
+        setCount(response.count)
     },[])
-    
 
 
     return (
@@ -154,7 +156,7 @@ const AllEngagements = () => {
 
 
             <Box sx={{ py: 5, mx: { xs: 1, sm: 5 }, display: 'flex', flexDirection: 'column' }}>
-                {engagements?.results?.map(engagement => <Engagements
+                {results?.map(engagement => <Engagements
                     key={engagement.id}
                     engagement={engagement}
                 />)
