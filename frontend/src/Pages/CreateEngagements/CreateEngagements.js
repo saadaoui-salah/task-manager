@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import MemberList from './MemberList/MemberList';
+import { CreateEngagment } from '../../api';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -22,8 +23,15 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CreateEngagements = () => {
-    const [value, setValue] = React.useState(null);
-
+    const [data, setData] = React.useState({
+        name:'',
+        date:'',
+        memebers:[]
+    });
+    async function handleSubmit(e){
+        e.preventDefault()
+        const response = await CreateEngagment(data)
+    }
     return (
         <Box sx={{ mx: 'auto', mt: { xs: 8, sm: 1 }, px: { xs: 1, sm: 2 }, pb: 5 }} maxWidth="xl">
             <Typography sx={{ fontWeight: 700, fontSize: 22, textAlign: { xs: 'center', sm: 'left' } }}>
@@ -47,9 +55,9 @@ const CreateEngagements = () => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Report Date"
-                        value={value}
+                        value={data.date}
                         onChange={(newValue) => {
-                            setValue(newValue);
+                            setData({...data, date: newValue});
                         }}
                         renderInput={(params) => <TextField
                             sx={{
@@ -73,11 +81,11 @@ const CreateEngagements = () => {
 
             <Grid container spacing={0} sx={{ mt: 2, px: { xs: 0, sm: 4, md: 8 }, }}>
                 <Grid item xs={12} md={4} >
-                    <Form />
+                    <Form setData={setData} />
                 </Grid>
 
                 <Grid item xs={12} md={8} sx={{ pl: { md: 5 }, mt: { xs: 4, md: 0 } }}>
-                    <MemberList />
+                    <MemberList setData={setData}/>
                 </Grid>
             </Grid>
 

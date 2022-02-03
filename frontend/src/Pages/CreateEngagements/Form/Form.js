@@ -5,8 +5,13 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { UserSearch } from '../../../api';
 
-const Form = () => {
+
+const Form = (setData) => {
+    async function search(e){
+        const response = await UserSearch(e.target.value)  
+    }
     return (
         <Box>
 
@@ -18,6 +23,7 @@ const Form = () => {
                 fullWidth
                 id="standard-helperText"
                 label="Name or email"
+                onChange={search}
                 helperText="Enter name or email and press enter to see results."
                 variant="filled"
             />

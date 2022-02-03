@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +16,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-
+import { ListEvidence } from '../../../api';
 
 import jpgIcon from '../../../Images/icons/jpg.png';
 import xlsIcon from '../../../Images/icons/xls.png';
@@ -40,24 +40,10 @@ const EvidenceMainTable = () => {
         return { name, calories, fat, carbs, protein };
     }
 
-    const rows = [
-        createData("bookmarks_10_1_21.pdf", ' ', 6.0, 21,),
-        createData("bookmarks_11_5_21.pdf", ' ', 6.0, 14,),
-        createData("Hsc syllabus.pdf", ' ', 6.0, 25,),
-        createData("bookmarks_11_28_21.xlsx", ' ', 6.0, 1,),
-        createData("Buyer List.pdf", ' ', 6.0, 5,),
-        createData("Buyer Massage.docx", ' ', 6.0, 29,),
-        createData("Buyer Request Letter 22222.docx", ' ', 6.0, 30,),
-        createData("Buyer address 22222.pdf", ' ', 6.0, 80,),
-        createData("Capture.PNG", ' ', 6.0, 40,),
-        createData("New Microsoft Office Word Document.docx", ' ', 6.0, 23,),
-        createData("১২নং বরকরই ইউনিয়ন.xlsx", ' ', 6.0, 28,),
-        createData("56654.pdf", ' ', 6.0, 10,),
-        createData("At 26-07-2021 New Bookmark.jpg", ' ', 6.0, 28,),
-        createData("bookmarks_5_3_21.png", ' ', 6.0, 30,),
-        createData("bookmarks_6_21_21.pdf", ' ', 6.0, 80,),
-    ];
-
+    let rows ;
+    useEffect(async () => {
+        rows = await ListEvidence(2)
+    }, [])
 
     return (
         <Box sx={{

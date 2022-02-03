@@ -12,19 +12,13 @@ import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
 
-const MemberList = () => {
+
+const MemberList = ({members}) => {
+    
     const createData = (member, alias, role,) => {
         return { member, alias, role, };
     }
-    const rows = [
-        createData('Fake user 01', 'FU1', 'Reviewer',),
-        createData('Fake user 02', 'FU2', 'Preparer',),
-        createData('Fake user 03', 'FU3', 'Preparer',),
-        createData('Fake user 04', 'FU4', 'Preparer',),
-        createData('Fake user 05', 'FU5', 'Preparer',),
-        createData('Fake user 06', 'FU6', 'Preparer',),
-    ];
-
+    const rows = [members.map(member => createData(member.name, member.alias, member.role))];
 
     return (
         <TableContainer component={Paper}>
