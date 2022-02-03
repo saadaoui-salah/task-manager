@@ -23,14 +23,14 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-const TaskListMainContents = ({taskID}) => {
+const TaskListMainContents = ({engagmentID, taskID}) => {
     const [taskDetails, setTaskDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     // Get Task _id form the Task.js file and find same task in DB--------------
     useEffect(async () => {
         setIsLoading(false)
-        setTaskDetails(await GetTask(taskID))
+        setTaskDetails(await GetTask(engagmentID, taskID))
         setIsLoading(false)
     },[])    
 

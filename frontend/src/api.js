@@ -35,7 +35,7 @@ const Post = async (data, path) => {
 }
 
 export const ListEngagment= () => {
-    return Get(`/engagment/egagment-listing/`) 
+    return Get('/engagment/engagment-listing/') 
 }//done
 
 export const UserSearch = (keyword) => {

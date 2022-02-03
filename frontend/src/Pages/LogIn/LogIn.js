@@ -50,7 +50,7 @@ const LogIn = () => {
             setIsloading(false)
         }
         else if (result.token) {
-            localStorage.setItem('token', JSON.stringify(result.token[0]))
+            localStorage.setItem('token', result.token[0])
             setError('')
             setIsloading(false)
         }
