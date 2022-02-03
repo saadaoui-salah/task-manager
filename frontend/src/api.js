@@ -14,7 +14,6 @@ const Get = async (path) => {
     })
     .then(response => response.json())
     .then(results => response = results)
-    console.log(response)
     return response
 }
 
@@ -31,7 +30,6 @@ const Post = async (data, path) => {
     })
     .then(response => response.json())
     .then(results => response = results)
-    console.log(response)
     return response
 }
 
@@ -39,28 +37,28 @@ export const ListEngagment = () => {
     return Get('/engagment/engagment-listing/') 
 }//done fixed
 
+export const Login = (data) => {
+    return Post(data, '/user/login/') 
+}// done fixed
+
+export const ListTaskGroups = (engagmentID) => {
+    return Get(`/user/engagment/${engagmentID}/task-group/`) 
+} // done fixed
+
+export const ListTasks = (groupID) => {
+    return Get(`/user/task-group/${groupID}/tasks/`) 
+} // done fixed
+
+export const GetTask = (taskID) => {
+    return Get(`/user/tasks/${taskID}/`) 
+} // done fixed
+
 export const UserSearch = (keyword) => {
     return Get(`/user/search/keyword/${keyword}/`) 
 } // done
 
 export const CreateEngagment = (data) => {
     return Post(data, '/engagment/create-new-engagment/') 
-} // done
-
-export const Login = (data) => {
-    return Post(data, '/user/login/') 
-}// done fixed
-
-export const ListTasksGroupByEngagment = (engagmentID) => {
-    return Get(`/user/engagment/${engagmentID}/task-group/`) 
-} // done
-
-export const ListTasksByTaskGroup = (taskGroupID) => {
-    return Get(`/user/task-group/${taskGroupID}/tasks/`) 
-} // done
-
-export const GetTask = (engagmentID, taskID) => {
-    return Get(`/user/engagment/${engagmentID}/tasks/${taskID}/`) 
 } // done
 
 export const ListEvidence = (engagmentID) => {

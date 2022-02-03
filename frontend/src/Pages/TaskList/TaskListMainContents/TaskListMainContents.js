@@ -9,7 +9,6 @@ import TaskListingByGroup from './TaskListingByGroup/TaskListingByGroup';
 import { useState } from 'react';
 import TaskDetails from './TaskDetails/TaskDetails';
 import CircularProgress from '@mui/material/CircularProgress';
-import { GetTask } from '../../../api';
 
 
 
@@ -23,17 +22,12 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 
-const TaskListMainContents = ({engagmentID, taskID}) => {
+const TaskListMainContents = () => {
     const [taskDetails, setTaskDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     // Get Task _id form the Task.js file and find same task in DB--------------
-    useEffect(async () => {
-        setIsLoading(false)
-        const response = await GetTask(3, 1)
-        setTaskDetails(response.data)
-        setIsLoading(false)
-    },[])    
+
 
     return (
         <Box sx={{ m: 0, p: 0, mt: { xs: 7, sm: 0 }, height: '100%', }}>
@@ -44,7 +38,7 @@ const TaskListMainContents = ({engagmentID, taskID}) => {
                     '&.MuiGrid-root': { p: 0, }, position: 'relative',
                     height: { xs: 'auto', lg: 950 },
                 }}>
-                    <TaskListingByGroup />
+                    <TaskListingByGroup setIsLoading={setIsLoading} setTaskDetails={setTaskDetails} />
                 </Grid>
 
 

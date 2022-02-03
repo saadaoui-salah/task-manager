@@ -5,13 +5,17 @@ from .models import Task, UploadedEvidence, BuildinEvidence, TaskGroup
 class TaskSerializer(ModelSerializer):
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ['id', 'prefix', 'description']
 
-class TaskGroupSerializer(ModelSerializer):
+class TaskDetailSerializer(ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
 
+class TaskGroupSerializer(ModelSerializer):
+    class Meta:
+        model = TaskGroup
+        fields = ['id', 'name']
 
 class UploadedEvidenceSerializer(ModelSerializer):
     class Meta:

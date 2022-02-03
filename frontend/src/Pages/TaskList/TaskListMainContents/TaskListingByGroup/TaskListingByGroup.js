@@ -10,20 +10,18 @@ import Tab from '@mui/material/Tab';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import Task from './Task/Task';
 import TablePagination from '@mui/material/TablePagination';
-import { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ListTasksByEngagment } from '../../../../api';
+import { ListTaskGroups } from '../../../../api';
 
 
-const TaskListingByGroup = () => {
-    const [taskListData, setTaskListData] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(async () => {
-        const response = await ListTasksByEngagment(3)
-        console.log(response)
-        setTaskListData(response.data)
-    }, [])
+const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
+    const [taskGroupsList, setTaskGroupsList] = React.useState([])
+    
+    useEffect(async ()=>{
+        const response = await ListTaskGroups(102)
+        setTaskGroupsList(response.data)
+    },[])
 
     // For Changing Tabs----------------------
     const [value, setValue] = React.useState(0);
@@ -113,19 +111,18 @@ const TaskListingByGroup = () => {
 
                 {/* ----------Task with accordion---------- */}
                 <Box sx={{ pl: { xs: 2, sm: 0 }, position: 'static', textAlign: 'center' }}>
-                    {isLoading
+                    {!taskGroupsList
                         ? <Box sx={{ display: 'flex', mx: 'auto', py: 18 }}>
                             <CircularProgress sx={{ mx: 'auto' }} />
                         </Box>
-                        : taskListData?.map(taskData => <Task
-                            key={taskData.id}
-                            taskData={taskData}
+                        : taskGroupsList.map(taskGroupData => <Task
+                            key={taskGroupData.id}
+                            taskGroupData={taskGroupData}
+                            setTaskDetails={setTaskDetails}
+                            setIsLoading={setIsLoading}
                         />)
                     }
                 </Box>
-
-
-
 
                 {/* ---------------Bottom Pagination section--------------- */}
                 <Box sx={{ boxShadow: { xs: 3, lg: 1 }, position: { xs: "static", lg: 'absolute' }, bottom: 0, width: '100%', zIndex: 2, mt: { xs: 2, lg: 0 }, }}>
@@ -140,9 +137,6 @@ const TaskListingByGroup = () => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </Box>
-
-
-
 
             </Box>
         </Box>

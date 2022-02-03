@@ -20,12 +20,13 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
 const TaskDetails = ({ taskDetails }) => {
-    const { _id, type, discription, date, customizeDiscription } = taskDetails;
+    console.log(taskDetails)
+    const { id, title, completed, description, date } = taskDetails[0];
     const [showExtraDescription, setShowExtraDescription] = useState(false)
     const [discriptionEdit, setDiscriptionEdit] = useState(false)
     const [discriptionUpdate, setDiscriptionUpdate] = useState(false)
 
-
+    const customizeDiscription = description
     // To get top-right checkbox value--------
     const handleCheckbox = e => {
         // console.log(e.target.checked)
@@ -41,7 +42,7 @@ const TaskDetails = ({ taskDetails }) => {
     return (
         <Box sx={{ mt: { xs: 3, sm: 0 } }}>
             <Box sx={{ textAlign: 'right', mb: 1 }}>
-                <Checkbox onClick={handleCheckbox}
+                <Checkbox onClick={handleCheckbox} value={completed}
                     sx={{
                         '& .MuiSvgIcon-root': { fontSize: 45, color: '#2db757', },
                     }}
@@ -51,8 +52,8 @@ const TaskDetails = ({ taskDetails }) => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', }}>
                     <CircleOutlinedIcon sx={{ color: '#00753a', fontSize: 25, mr: 0.4 }} />
-                    <Typography sx={{ fontWeight: 700, fontSize: 18 }}>{type} | </Typography>
-                    <Typography sx={{ fontSize: 18, ml: 1, textAlign: 'left' }}>{discription.slice(0, 50)}</Typography>
+                    <Typography sx={{ fontWeight: 700, fontSize: 18 }}>{title} | </Typography>
+                    <Typography sx={{ fontSize: 18, ml: 1, textAlign: 'left' }}>{description.slice(0, 50)}</Typography>
                 </Box>
                 <MoreHorizIcon sx={{ cursor: 'pointer' }} />
             </Box>

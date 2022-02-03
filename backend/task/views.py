@@ -7,27 +7,33 @@ from rest_framework import authentication
 from django.contrib.auth.models import User
 from engagment.models import Engagment
 
-class TaskByTaskGroupApiView(APIView):
-    def get(self, request, group_id):
+
+class TaskDetailApiView(APIView):
+
+    def get(self, request, task_id):
         if request.is_authenticated:
-            queryset   =  Task.objects.filter(task_group__id=group_id)
-            serializer = TaskSerializer(queryset, many=True)
+            queryset   =  Task.objects.filter(id=task_id)
+            serializer = TaskDetailSerializer(queryset, many=True)
             return Response({'data':serializer.data, 'error':''})        
         return Response({'data':[], 'error':'user not authenticated'})
 
-class TaskGroupByEngagmentApiView(APIView):
+class TaskGroupsApiView(APIView):
+
     def get(self, request, eng_id):
         if request.is_authenticated:
-            queryset   =  TaskGroup.objects.filter(task_group__engagment__id=eng_id)
-            serializer = TaskGroupSerializer(queryset, many=True)
+            queryset   =  TaskGroup.objects.filter(engagment__id=eng_id)
+            serializer = TaskGroupSerializer(queryset, many=True) 
+            count = Task.objects.filter(task_group__engagment__id=eng_id).count()
+            serializer.data[2] = ('count', count)
             return Response({'data':serializer.data, 'error':''})        
         return Response({'data':[], 'error':'user not authenticated'})
 
 class TasksApiView(APIView):
-    def get(self, request, eng_id, task_id):
+
+    def get(self, request, group_id):
         if request.is_authenticated:
-            queryset   =  Task.objects.filter(task_group__engagment__id=eng_id, id=task_id)
-            serializer = TaskSerializer(queryset, many=True)
+            queryset   =  Task.objects.filter(task_group__id=group_id)
+            serializer = TaskSerializer(queryset, many=True) 
             return Response({'data':serializer.data, 'error':''})        
         return Response({'data':[], 'error':'user not authenticated'})
 
