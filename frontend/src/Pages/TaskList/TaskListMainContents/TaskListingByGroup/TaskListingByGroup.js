@@ -19,7 +19,7 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
     const [taskGroupsList, setTaskGroupsList] = React.useState([])
     
     useEffect(async ()=>{
-        const response = await ListTaskGroups(102)
+        const response = await ListTaskGroups(3)
         setTaskGroupsList(response.data)
     },[])
 
