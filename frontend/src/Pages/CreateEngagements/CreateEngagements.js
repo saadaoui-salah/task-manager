@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -25,6 +25,13 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const CreateEngagements = () => {
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) {
+            navigate("/login")
+        }
+    }, [localStorage.getItem('token')])
+
     const [data, setData] = React.useState({
         name: '',
         report_date: '',
@@ -35,7 +42,7 @@ const CreateEngagements = () => {
     async function handleSubmit(e) {
         e.preventDefault();
         const response = await CreateEngagment(data);
-        if (response.created){
+        if (response.created) {
             navigate("/all-engagements")
         }
     }

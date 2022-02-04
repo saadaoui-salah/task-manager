@@ -13,12 +13,22 @@ import TaskNavLinks from './DrawerSections/TaskNavLinks/TaskNavLinks';
 import TaskStatus from './DrawerSections/TaskStatus/TaskStatus';
 import AssignmentStatus from './DrawerSections/AssignmentStatus/AssignmentStatus';
 import TaskListMainContents from './TaskListMainContents/TaskListMainContents';
+import { useNavigate } from 'react-router-dom';
 
 
 const drawerWidth = 240;
 
 
 const TaskList = (props) => { //---------------------------------
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) {
+            navigate("/login")
+        }
+    }, [localStorage.getItem('token')])
+
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
 

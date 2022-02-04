@@ -15,7 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import Engagements from './Engagements/Engagements';
 import { ListEngagment } from '../../api'
-
+import { useNavigate } from 'react-router-dom';
 
 const tabStyle = {
     default_tab: {
@@ -29,10 +29,14 @@ const tabStyle = {
 };
 
 const AllEngagements = () => {
-    const token = localStorage.getItem('token');
-    if (token === null && !token) {
-        console.log('not auth')
-    } 
+    const navigate = useNavigate()
+
+    useEffect(()=>{
+        if (localStorage.getItem('token') === null ){
+            navigate("/login")
+        }
+    },[localStorage.getItem('token')])
+
     const [value, setValue] = React.useState(0);
     const [alignment, setAlignment] = React.useState('list');
 
