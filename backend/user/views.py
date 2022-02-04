@@ -30,7 +30,7 @@ class LoginView(APIView):
 class SearchUserView(APIView):
     def get(self, request, keyword):
         if request.is_authenticated:
-            users = User.objects.filter(Q(username__contains=keyword) | Q(email__contains=keyword)).values_list('id', 'username')  
+            users = User.objects.filter(Q(username__contains=keyword) | Q(email__contains=keyword)).values_list('id', 'username', 'first_name', 'is_superuser', 'is_staff')  
             return Response({'users': list(users), 'errors':''})
         return Response({'users': '', 'errors':'user not authenticated'})
 

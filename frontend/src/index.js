@@ -17,9 +17,9 @@ ReactDOM.render(
     <BrowserRouter>
       <App>
         <Routes>
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/task-list" element={<TaskList />} />
-          <Route path="/all-engagements" element={<AllEngagements />} />
+          <Route exact path="/login" element={<LogIn />} /> {/* done */}
+          <Route path="/task-list" element={<TaskList />} /> {/* done */}
+          <Route path="/all-engagements" element={<AllEngagements />} /> {/* done */}
           <Route path="/evidence" element={<Evidence />} />
           <Route path="/create-engagements" element={<CreateEngagements />} />
           <Route path="/built-in-evidence" element={<BuiltInEvidence />} />

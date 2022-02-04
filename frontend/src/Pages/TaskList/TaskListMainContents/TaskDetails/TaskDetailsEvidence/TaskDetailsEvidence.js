@@ -6,7 +6,7 @@ import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EvidenceTable from './EvidenceTable/EvidenceTable';
-
+import { Link } from "react-router-dom";
 
 const TaskDetailsEvidence = () => {
 
@@ -56,7 +56,7 @@ const TaskDetailsEvidence = () => {
                         mr: 1, mt: { xs: 2, sm: 0 }
                     }}>
                         <AddCircleIcon sx={{ color: '#2e2e38', mr: 0.5 }} />
-                        Create Built-in document
+                        <Link to="/built-in-evidence">Create Built-in document</Link>
                     </Button>
                 </Box>
 

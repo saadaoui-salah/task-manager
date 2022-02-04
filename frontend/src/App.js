@@ -3,7 +3,6 @@ import Header from './Shared/Header/Header';
 
 
 function App({ children }) {
-  const token = localStorage.getItem('token')
 
   return (
     <div className="App">

@@ -1,6 +1,6 @@
 
-//const BASE_URL = "https://task-manager-api-f.herokuapp.com/api"
-const BASE_URL = "http://127.0.0.1:8000/api"
+const BASE_URL = "https://task-manager-api-f.herokuapp.com/api"
+//const BASE_URL = "http://127.0.0.1:8000/api"
 
 const Get = async (path) => {
     const token = localStorage.getItem('token')
@@ -54,12 +54,15 @@ export const GetTask = (taskID) => {
 } // done fixed
 
 export const UserSearch = (keyword) => {
-    return Get(`/user/search/keyword/${keyword}/`) 
-} // done
+    if (keyword){
+        return Get(`/user/search/keyword/${keyword}/`) 
+    }
+} // done fixed
 
 export const CreateEngagment = (data) => {
+    console.log(data)
     return Post(data, '/engagment/create-new-engagment/') 
-} // done
+} // done fixed
 
 export const ListEvidence = (engagmentID) => {
     return Get(`/user/engagment/${engagmentID}/evidence/all/`) 

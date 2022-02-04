@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -13,8 +13,18 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Login } from '../../api'
+import { useNavigate } from 'react-router-dom';
+
 
 const LogIn = () => {
+
+    const navigate = useNavigate()
+    useEffect(()=>{
+        if (localStorage.getItem('token') != null ){
+            navigate("/task-list")
+        }
+    },[localStorage.getItem('token')])
+
     const [values, setValues] = React.useState({
         amount: '',
         user: '',
@@ -53,6 +63,7 @@ const LogIn = () => {
             localStorage.setItem('token', result.token[0])
             setError('')
             setIsloading(false)
+            navigate("/task-list")
         }
     }
 

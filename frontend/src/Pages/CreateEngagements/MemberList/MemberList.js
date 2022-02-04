@@ -15,11 +15,6 @@ import Typography from '@mui/material/Typography';
 
 const MemberList = ({members}) => {
     
-    const createData = (member, alias, role,) => {
-        return { member, alias, role, };
-    }
-    const rows = [members.map(member => createData(member.name, member.alias, member.role))];
-
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -31,9 +26,9 @@ const MemberList = ({members}) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {members?.map((member) => (
                         <TableRow
-                            key={row.name}
+                            key={member.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
@@ -44,17 +39,18 @@ const MemberList = ({members}) => {
                                         '& .css-ejll1l-MuiBadge-badge': { backgroundColor: 'white', border: '2.5px solid #8a8886', height: 15, p: 0, minWidth: 15, top: 30, right: 4, }
                                     }} overlap="circular" badgeContent=" ">
                                         <Avatar sx={{ bgcolor: '#5c2e91' }} aria-label="recipe">
-                                            R
+                                            {member.role === 'reviewer' ? 'R' : 'P'}
                                         </Avatar>
                                     </Badge>
                                     <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 3 }}>
-                                        {row.member}
+                                        {member.name}
+                                        {console.log(member)}
                                     </Typography>
                                 </Box>
                             </TableCell>
 
-                            <TableCell align="center">{row.alias}</TableCell>
-                            <TableCell align="center">{row.role}</TableCell>
+                            <TableCell align="center">{member.alias}</TableCell>
+                            <TableCell align="center">{member.role}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

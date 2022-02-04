@@ -40,10 +40,17 @@ const EvidenceMainTable = () => {
         return { name, calories, fat, carbs, protein };
     }
 
-    let rows ;
-    useEffect(async () => {
-        rows = await ListEvidence(2)
-    }, [])
+    let rows = [
+        createData("file.jpg", "red", "fat", "crabs", "protien")
+    ]
+    
+    const [evidenceList, setEvidenceList] = React.useState();
+    
+    useEffect(async ()=>{
+        const response = await ListEvidence(1)
+        setEvidenceList([...response.data.buildin_evidence, ...response.data.uploaded_evidence])
+    },[])
+
 
     return (
         <Box sx={{

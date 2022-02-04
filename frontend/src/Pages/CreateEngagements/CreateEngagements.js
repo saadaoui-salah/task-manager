@@ -11,7 +11,8 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import MemberList from './MemberList/MemberList';
-import { CreateEngagment } from '../../api';
+import { CreateEngagment, UserSearch } from '../../api';
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -23,15 +24,53 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 const CreateEngagements = () => {
+    const navigate = useNavigate()
     const [data, setData] = React.useState({
-        name:'',
-        date:'',
-        memebers:[]
+        name: '',
+        report_date: '',
+        invited_members: []
     });
-    async function handleSubmit(e){
-        e.preventDefault()
-        const response = await CreateEngagment(data)
+
+    const [members, setMembers] = React.useState([])
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const response = await CreateEngagment(data);
+        if (response.created){
+            navigate("/all-engagements")
+        }
     }
+    const addMember = () => {
+        if (members.length > 0) {
+            const exist = members.filter(member => member.id === user.id).length > 0
+            if (exist) return;
+            setMembers([...members, { id: user.id, name: user.username, alias: user.alias, role: user.role }])
+        } else {
+            setMembers([{ id: user.id, name: user.username, alias: user.alias, role: user.role }])
+        }
+        setData({ ...data, invited_members: [...data.invited_members, user.id] })
+    }
+
+
+    const [user, setUser] = React.useState({
+        id: '',
+        username: '',
+        firstName: '',
+        role: '',
+        alias: ''
+    })
+
+    async function search(e) {
+        const response = await UserSearch(e.target.value)
+        const name = response.users[0][2]
+        setUser({
+            id: response.users[0][0],
+            username: response.users[0][1],
+            firstName: name,
+            role: response.users[0][3] ? 'reviewer' : 'preparer',
+            alias: name.toUpperCase().slice(0, 3)
+        })
+    }
+
     return (
         <Box sx={{ mx: 'auto', mt: { xs: 8, sm: 1 }, px: { xs: 1, sm: 2 }, pb: 5 }} maxWidth="xl">
             <Typography sx={{ fontWeight: 700, fontSize: 22, textAlign: { xs: 'center', sm: 'left' } }}>
@@ -55,9 +94,9 @@ const CreateEngagements = () => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                         label="Report Date"
-                        value={data.date}
+                        value={data.report_date}
                         onChange={(newValue) => {
-                            setData({...data, date: newValue});
+                            setData({ ...data, report_date: newValue });
                         }}
                         renderInput={(params) => <TextField
                             sx={{
@@ -71,7 +110,7 @@ const CreateEngagements = () => {
             </Box>
 
             <Box sx={{ textAlign: 'left', my: { xs: 3, sm: 2 }, }}>
-                <Button variant="contained" style={{ backgroundColor: '#2e2e38', display: 'inline-block' }}>
+                <Button onClick={addMember} variant="contained" style={{ backgroundColor: '#2e2e38', display: 'inline-block' }}>
                     Add Internal Member
                 </Button>
             </Box>
@@ -81,11 +120,15 @@ const CreateEngagements = () => {
 
             <Grid container spacing={0} sx={{ mt: 2, px: { xs: 0, sm: 4, md: 8 }, }}>
                 <Grid item xs={12} md={4} >
-                    <Form setData={setData} />
+                    <Form
+                        user={user}
+                        search={search}
+                        handleSubmit={handleSubmit}
+                    />
                 </Grid>
 
                 <Grid item xs={12} md={8} sx={{ pl: { md: 5 }, mt: { xs: 4, md: 0 } }}>
-                    <MemberList setData={setData}/>
+                    <MemberList members={members} />
                 </Grid>
             </Grid>
 
