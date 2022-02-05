@@ -14,9 +14,18 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import EvidenceMainTable from './EvidenceMainTable/EvidenceMainTable';
-
+import { useNavigate } from "react-router-dom";
 
 const Evidence = () => {
+
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (localStorage.getItem('token') === null) {
+            navigate("/login");
+        }
+    }, [localStorage.getItem('token')]);
+
     // For Table Pagination on the third header-------
     const [page, setPage] = React.useState(2);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);

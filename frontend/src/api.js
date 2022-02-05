@@ -1,6 +1,6 @@
 
-const BASE_URL = "https://task-manager-api-f.herokuapp.com/api"
-//const BASE_URL = "http://127.0.0.1:8000/api"
+//const BASE_URL = "https://task-manager-api-f.herokuapp.com/api"
+const BASE_URL = "http://127.0.0.1:8000/api"
 
 const Get = async (path) => {
     const token = localStorage.getItem('token')
@@ -9,7 +9,7 @@ const Get = async (path) => {
         method: 'GET',
         headers: {
             'content-type': 'application/json',
-            'Authorization': `bareer ${token}`
+            'Authorization': `Token ${token}`
         }
     })
     .then(response => response.json())
@@ -24,7 +24,7 @@ const Post = async (data, path) => {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'Authorization': `bareer ${token}`
+            'Authorization': `Token ${token}`
         },
         body: JSON.stringify(data)
     })
@@ -70,6 +70,14 @@ export const ListEvidence = (engagmentID) => {
 
 export const UploadEvidence = (engagmentID, data) => {
     return Post(data, `/user/engagment/${engagmentID}/evidence/upload/`) 
+}
+
+export const CreateTaskGroup = (data) => {
+    return Post(data, '/user/create-task-group/') 
+}
+
+export const CreateTask = (data) => {
+    return Post(data, '/user/create-task/') 
 }
 
 export const CreateEvidence = (engagmentID, data) => {

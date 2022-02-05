@@ -27,7 +27,7 @@ const LogIn = () => {
 
     const [values, setValues] = React.useState({
         amount: '',
-        user: '',
+        username: '',
         password: '',
         weight: '',
         weightRange: '',
@@ -51,7 +51,7 @@ const LogIn = () => {
 
     const handleFormOnSubmit = async (event) => {
         event.preventDefault();
-        const data = { password: values.password, user: values.user }
+        const data = { password: values.password, username: values.user }
 
         setIsloading(true)
         const result = await Login(data)
@@ -60,7 +60,7 @@ const LogIn = () => {
             setIsloading(false)
         }
         else if (result.token) {
-            localStorage.setItem('token', result.token[0])
+            localStorage.setItem('token', result.token)
             setError('')
             setIsloading(false)
             navigate("/task-list")

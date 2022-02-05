@@ -15,7 +15,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import Engagements from './Engagements/Engagements';
 import { ListEngagment } from '../../api'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 
 const tabStyle = {
     default_tab: {
@@ -31,11 +32,11 @@ const tabStyle = {
 const AllEngagements = () => {
     const navigate = useNavigate()
 
-    useEffect(()=>{
-        if (localStorage.getItem('token') === null ){
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) {
             navigate("/login")
         }
-    },[localStorage.getItem('token')])
+    }, [localStorage.getItem('token')])
 
     const [value, setValue] = React.useState(0);
     const [alignment, setAlignment] = React.useState('list');
@@ -64,11 +65,11 @@ const AllEngagements = () => {
     const [results, setResults] = React.useState([])
     const [count, setCount] = React.useState()
 
-    useEffect(async ()=> {
+    useEffect(async () => {
         const response = await ListEngagment()
         setResults(response.results)
         setCount(response.count)
-    },[])
+    }, [])
 
 
     return (
@@ -90,18 +91,20 @@ const AllEngagements = () => {
 
                     <Box
                         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: { xs: '100%', sm: 'auto' } }}>
-                        <Button variant="outlined" startIcon={<AddCircleSharpIcon />}
-                            sx={{
-                                px: { xs: 0, sm: 2 }, py: 1.2, mr: { xs: 1, sm: 3 },
-                                borderColor: '#2e2e38', color: '#2e2e38',
-                            }}>
-                            <Typography sx={{
-                                display: { xs: 'none', sm: 'block', },
-                                color: '#2e2e38', fontWeight: 600,
-                            }}>
-                                Add Engagement
-                            </Typography>
-                        </Button>
+                        <Link to="/create-engagements">
+                            <Button variant="outlined" startIcon={<AddCircleSharpIcon />}
+                                sx={{
+                                    px: { xs: 0, sm: 2 }, py: 1.2, mr: { xs: 1, sm: 3 },
+                                    borderColor: '#2e2e38', color: '#2e2e38',
+                                }}>
+                                <Typography sx={{
+                                    display: { xs: 'none', sm: 'block', },
+                                    color: '#2e2e38', fontWeight: 600,
+                                }}>
+                                    Add Engagement
+                                </Typography>
+                            </Button>
+                        </Link>
 
                         <ToggleButtonGroup
                             value={alignment}

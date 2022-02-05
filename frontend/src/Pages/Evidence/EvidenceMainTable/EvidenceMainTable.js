@@ -44,13 +44,14 @@ const EvidenceMainTable = () => {
         createData("file.jpg", "red", "fat", "crabs", "protien")
     ]
     
-    const [evidenceList, setEvidenceList] = React.useState();
+    const [evidenceList, setEvidenceList] = React.useState([]);
     
     useEffect(async ()=>{
         const response = await ListEvidence(1)
-        setEvidenceList([...response.data.buildin_evidence, ...response.data.uploaded_evidence])
+        setEvidenceList(response.data)
     },[])
-
+    
+    console.log(evidenceList)
 
     return (
         <Box sx={{
@@ -79,30 +80,32 @@ const EvidenceMainTable = () => {
 
 
                     <TableBody>
-                        {rows.map((row) => (
+                        {true ? evidenceList?.map(evidence => {
+                            const file = evidence.file 
+                            return (
                             <TableRow
-                                key={row.name}
+                                key={evidence.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
                                     <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
                                         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
                                             <img src={
-                                                row.name.split(".")[1].toLowerCase() === "jpg"
+                                                file.split(".")[1].toLowerCase() === "jpg"
                                                     ? jpgIcon
-                                                    : row.name.split(".")[1].toLowerCase() === "xlsx"
+                                                    : file.split(".")[1].toLowerCase() === "xlsx"
                                                         ? xlsIcon
-                                                        : row.name.split(".")[1].toLowerCase() === "pdf"
+                                                        : file.split(".")[1].toLowerCase() === "pdf"
                                                             ? pdfIcon
-                                                            : row.name.split(".")[1].toLowerCase() === "docx"
+                                                            : file.split(".")[1].toLowerCase() === "docx"
                                                                 ? docIcon
-                                                                : row.name.split(".")[1].toLowerCase() === "png"
+                                                                : file.split(".")[1].toLowerCase() === "png"
                                                                 && pngIcon
 
                                             } alt="" style={{ width: '23px' }} />
 
                                             <Typography sx={{ ml: 1 }}>
-                                                {row.name}
+                                                {file.split('/')[1]}
                                             </Typography>
                                         </Box>
                                         <Box>
@@ -129,9 +132,7 @@ const EvidenceMainTable = () => {
                                                     name: 'sign-offs',
                                                     id: 'uncontrolled-native',
                                                 }}>
-                                                <option value={10}>HUY</option>
-                                                <option value={20}>ML</option>
-                                                <option value={30}>MN</option>
+                                                <option value={10}>{evidence.preparer__username.slice(0,3).toUpperCase}</option>
                                             </NativeSelect>
                                         </FormControl>
                                     </Box>
@@ -148,8 +149,7 @@ const EvidenceMainTable = () => {
                                                     name: 'sign-offs',
                                                     id: 'uncontrolled-native',
                                                 }}>
-                                                <option value={10}>LHN</option>
-                                                <option value={20}>NHP</option>
+                                                    <option value={10}>{evidence.reviewer__username.slice(0,3).toUpperCase}</option>
                                             </NativeSelect>
                                         </FormControl>
                                     </Box>
@@ -159,11 +159,11 @@ const EvidenceMainTable = () => {
                                         display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
                                     }}>
                                         <AssignmentTurnedInIcon />
-                                        {row.carbs}
+                                        {12}
                                     </Box>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )}) : ''}
                     </TableBody>
 
                 </Table>

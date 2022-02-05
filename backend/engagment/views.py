@@ -12,24 +12,24 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 10
 
 class EngagmentListView(ListAPIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
     queryset = Engagment.objects.all()
     serializer_class = EngagmentListSerializer
     pagination_class = StandardResultsSetPagination
 
 class CreateEngagmentApiView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if request.is_authenticated:
-            try:
-                engagment = Engagment.objects.create(
-                    name=request.data['name'],
-                    report_date=request.data['report_date']
-                )
-                print(request.data['invited_members'])
-                engagment.invited_members.set([1])
-                serializer = EngagmentListSerializer(engagment)
-                return Response({'created':True, 'data': serializer.data, 'error': ''})
-            except Exception as e:
-                return Response({'created':False, 'data': {}, 'error': e})
-        return Response({'created':False, 'data': {}, 'error':'request not valid'})
+        try:
+            engagment = Engagment.objects.create(
+                name=request.data['name'],
+                report_date=request.data['report_date']
+            )
+            engagment.invited_members.set(request.data['invited_members'])
+            serializer = EngagmentListSerializer(engagment)
+            return Response({'created':True, 'data': serializer.data, 'error': ''})
+        except Exception as e:
+            return Response({'created':False, 'data': {}, 'error': e})

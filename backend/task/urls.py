@@ -4,6 +4,8 @@ from .views import *
 urlpatterns = [
     path('engagment/<int:eng_id>/task-group/', TaskGroupsApiView.as_view()),
     path('task-group/<int:group_id>/tasks/', TasksApiView.as_view()),
+    path('create-task-group/', CreateTaskGroupApiView.as_view()),
+    path('create-task/', CreateTaskApiView.as_view()),
     path('tasks/<int:task_id>/', TaskDetailApiView.as_view()),
     path('engagment/evidence/upload/', UploadEvidenceApiView.as_view()),
     path('engagment/evidence/create/', CreateEvidenceApiView.as_view()),

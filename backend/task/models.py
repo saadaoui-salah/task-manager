@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class TaskGroup(models.Model):
     user_create = models.ForeignKey(User, limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
     name        = models.CharField(max_length=100)
-    descripion  = models.TextField()
+    descripion  = models.TextField(blank=True, null=True)
     engagment   = models.ForeignKey("engagment.Engagment", on_delete=models.CASCADE)
 
     def __str__(self):
