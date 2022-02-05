@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from .serializer import EngagmentListSerializer, EngagmentSerializer
 from rest_framework.views import APIView
 from rest_framework import authentication
+from rest_framework.permissions import IsAuthenticated
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10

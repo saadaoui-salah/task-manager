@@ -7,7 +7,7 @@ from rest_framework import authentication
 from django.contrib.auth.models import User
 from engagment.models import Engagment
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework import authentication
 
 class TaskDetailApiView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
