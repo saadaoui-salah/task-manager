@@ -6,11 +6,11 @@ import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EvidenceTable from './EvidenceTable/EvidenceTable';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-const TaskDetailsEvidence = () => {
+const TaskDetailsEvidence = ({taskID}) => {
 
-
+    const { id } = useParams()
     // Avidence Tab --------------
     const [value, setValue] = React.useState(0);
 
@@ -43,7 +43,7 @@ const TaskDetailsEvidence = () => {
 
             <Box sx={{ border: '1px solid gray', }}>
                 <Box sx={{ textAlign: 'left', py: 0.5 }}>
-                    <Button variant="text" sx={{
+                    <Button type="file" variant="text" sx={{
                         color: '#2e2e38', fontWeight: 550, fontSize: 16, textTransform: 'Capitalize',
                         mr: 1
                     }}>
@@ -56,11 +56,11 @@ const TaskDetailsEvidence = () => {
                         mr: 1, mt: { xs: 2, sm: 0 }
                     }}>
                         <AddCircleIcon sx={{ color: '#2e2e38', mr: 0.5 }} />
-                        <Link to="/built-in-evidence">Create Built-in document</Link>
+                        Create Built-in document
                     </Button>
                 </Box>
 
-                <EvidenceTable />
+                <EvidenceTable id={taskID} />
 
 
 

@@ -20,13 +20,13 @@ ReactDOM.render(
       <App>
         <Routes>
           <Route exact path="/login" element={<LogIn />} /> {/* done */}
-          <Route path="/task-list" element={<TaskList />} /> {/* done */}
+          <Route path="/engagement/:id/task-list" element={<TaskList />} /> {/* done */}
+          <Route path="engagement/:id/evidence" element={<Evidence />} />
           <Route path="/all-engagements" element={<AllEngagements />} /> {/* done */}
-          <Route path="/evidence" element={<Evidence />} />
           <Route path="/create-engagements" element={<CreateEngagements />} /> {/* done */}
-          <Route path="/built-in-evidence" element={<BuiltInEvidence />} />
-          <Route path="/create-task-group" element={<CreateTaskGroupForm />} />
-          <Route path="/create-task" element={<CreateTaskForm />} />
+          <Route path="/task/:id/built-in-evidence" element={<BuiltInEvidence />} />
+          <Route path="/engagement/:id/create-task-group" element={<CreateTaskGroupForm />} />
+          <Route path="/engagement/:id/create-task" element={<CreateTaskForm />} />
         </Routes>
       </App>
     </BrowserRouter>

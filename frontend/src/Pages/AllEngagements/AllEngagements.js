@@ -163,11 +163,14 @@ const AllEngagements = () => {
 
 
             <Box sx={{ py: 5, mx: { xs: 1, sm: 5 }, display: 'flex', flexDirection: 'column' }}>
-                {results?.map(engagement => <Engagements
-                    key={engagement.id}
-                    engagement={engagement}
-                />)
-                }
+                {results?.map(engagement =>
+                    <Link pathname={`engagement/${engagement.id}/task-list`}>
+                        <Engagements
+                            key={engagement.id}
+                            engagement={engagement}
+                        />
+                    </Link>
+                )}
             </Box>
         </Box>
     );

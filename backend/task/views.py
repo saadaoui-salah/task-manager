@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from engagment.models import Engagment
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import authentication
+from django.conf import settings
 
 class TaskDetailApiView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -27,6 +28,18 @@ class TaskGroupsApiView(APIView):
         serializer = TaskGroupSerializer(queryset, many=True) 
         return Response({'data':serializer.data, 'error':''})        
 
+class ListEvidenceByTaskApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+
+    def get(self, request, task_id):
+        uploaded_evidence = list(UploadedEvidence.objects.filter(task__id=task_id).values('id','preparer__username','reviewer__username', 'file'))
+        buildin_evidence = list(BuildinEvidence.objects.filter(task__id=task_id).values('id','preparer__username', 'reviewer__username',  'file'))
+        print(buildin_evidence)
+        return Response({
+            'data':uploaded_evidence + buildin_evidence , 
+            'error': ''
+        })
     
 class CreateTaskGroupApiView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -71,9 +84,12 @@ class TasksApiView(APIView):
     prempermission_classes = [IsAuthenticated]
 
     def get(self, request, group_id):
-        queryset   =  Task.objects.filter(task_group__id=group_id)
-        serializer = TaskSerializer(queryset, many=True) 
-        return Response({'data':serializer.data, 'error':''})        
+        try:
+            queryset   =  Task.objects.filter(task_group__id=group_id)
+            serializer = TaskSerializer(queryset, many=True) 
+            return Response({'data':serializer.data, 'error':''})        
+        except:
+            return Response({'data':[], 'error':'group not found'})        
 
 
 class UploadEvidenceApiView(APIView):
@@ -95,6 +111,7 @@ class CreateEvidenceApiView(APIView):
         engagment = Engagment.objects.filter(id=request.data['engagment']).get()
         preparer = User.objects.filter(id=request.data['preparer']).get()
         reviewer = User.objects.filter(id=request.data['reviewer']).get()
+        
         evidence = BuildinEvidence.objects.create(
             name=request.data['name'],
             content=request.data['content'],
@@ -105,7 +122,34 @@ class CreateEvidenceApiView(APIView):
         evidence.save()
         serializer = BuildinEvidenceSerializer(evidence)
         return Response({'created':True, 'data':serializer.data, 'error':''})
-        
+
+class ListUploadedEvidenceApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+
+    def post(self, request, task_id):
+        import json
+        task = Task.objects.filter(id=task_id).get()
+        evidence = BuildinEvidence.objects.create(task=task)
+        with open(f"./tasks_files/evidence_{evidence.id}.json","w") as f:
+            f.write(json.dumps(request.data['evidence']))
+        evidence.file = f"./tasks_files/evidence_{evidence.id}.json"
+        return Response({'created':True, 'error':''})
+    
+    def get(self, request, eng_id):
+        try:
+            evidences = BuildinEvidence.objects.filter(task__task_group__engagment__id=eng_id)
+            data = []
+            import json
+            for evidence in evidences:
+                new = {}
+                new['id'] = evidence.id
+                new['evidence'] = json.load(open(f"{settings.BASE_DIR}/{evidence}"))
+                data.append(new)
+            return Response({'data':data, 'error':''})
+        except: 
+            return Response({'data':'', 'error':'bad request'})
+
 
 
 class EvidenceListApiView(APIView):
@@ -113,9 +157,53 @@ class EvidenceListApiView(APIView):
     prempermission_classes = [IsAuthenticated]
 
     def get(self, request, eng_id):
-        uploaded_evidence = list(UploadedEvidence.objects.filter(engagment__id=eng_id).values('id','preparer__username','reviewer__username','name', 'file', 'note'))
-        buildin_evidence = list(BuildinEvidence.objects.filter(engagment__id=eng_id).values('id','preparer__username', 'reviewer__username', 'name', 'content'))
+        uploaded_evidence = list(
+            UploadedEvidence.objects.filter(
+                task__task_group__engagment__id=eng_id
+                ).values(
+                    'id','preparer__username','reviewer__username', 'file'
+                    )
+                )
+        buildin_evidence = list(
+            BuildinEvidence.objects.filter(
+                task__task_group__engagment__id=eng_id
+                ).values(
+                    'id','preparer__username', 'reviewer__username', 'file'
+                    )
+                )
         return Response({
-            'data':uploaded_evidence , 
+            'data':uploaded_evidence + buildin_evidence , 
             'error': ''
             })
+
+
+class ContrebutersApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+    
+    def get(self, request, eng_id):
+        try:
+            contrebuters = Engagment.objects.filter(id=eng_id).values('invited_members__username', 'invited_members__id', 'invited_members__is_staff')
+            return Response({'data':{'contrebuters':contrebuters, 'count':len(contrebuters)}})
+        except:
+            return Response({'error':'engagment not found'})
+
+class UpdateContrebuterApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+    
+    def post(self, request, evidence_id):
+        user = User.objects.filter(id=request.data['id']).get()
+        if user.is_staff:
+            evidence = UploadedEvidence.objects.filter(id=evidence_id).get()
+            evidence.preparer = user
+            evidence.save()
+            print(evidence.preparer)
+            return Response({'updated':True, 'error':''})
+        else: 
+            evidence = UploadedEvidence.objects.filter(id=evidence_id).get()
+            evidence.reviewer = user
+            evidence.save()
+            print(evidence.reviewer)
+            return Response({'updated':True, 'error':''})
+        

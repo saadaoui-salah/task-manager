@@ -7,7 +7,10 @@ urlpatterns = [
     path('create-task-group/', CreateTaskGroupApiView.as_view()),
     path('create-task/', CreateTaskApiView.as_view()),
     path('tasks/<int:task_id>/', TaskDetailApiView.as_view()),
+    path('tasks/<int:task_id>/evidence-list/', ListEvidenceByTaskApiView.as_view()),
     path('engagment/evidence/upload/', UploadEvidenceApiView.as_view()),
-    path('engagment/evidence/create/', CreateEvidenceApiView.as_view()),
-    path('engagment/<int:eng_id>/evidence/all/', EvidenceListApiView.as_view())
+    path('engagment/<int:task_id>/evidence/', ListUploadedEvidenceApiView.as_view()),
+    path('engagment/<int:eng_id>/evidence/all/', EvidenceListApiView.as_view()),
+    path('engagment/<int:eng_id>/contrebuters/', ContrebutersApiView.as_view()),
+    path('evidence/<int:evidence_id>/contrebuters/update', UpdateContrebuterApiView.as_view())
 ]

@@ -12,16 +12,16 @@ import Task from './Task/Task';
 import TablePagination from '@mui/material/TablePagination';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ListTaskGroups } from '../../../../api';
-
+import { useParams } from 'react-router-dom';
 
 
 const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
     const [taskGroupsList, setTaskGroupsList] = React.useState([])
-    
-    useEffect(async ()=>{
-        const response = await ListTaskGroups(3)
+    const { id } = useParams();
+    useEffect(async () => {
+        const response = await ListTaskGroups(id)
         setTaskGroupsList(response.data)
-    },[])
+    }, [])
 
     // For Changing Tabs----------------------
     const [value, setValue] = React.useState(0);
@@ -31,7 +31,7 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
 
 
     // For Pagination-------------------------
-    const [page, setPage] = React.useState(2);
+/*     const [page, setPage] = React.useState(2);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -39,7 +39,7 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
+    }; */
 
 
     return (
@@ -125,7 +125,7 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
                 </Box>
 
                 {/* ---------------Bottom Pagination section--------------- */}
-                <Box sx={{ boxShadow: { xs: 3, lg: 1 }, position: { xs: "static", lg: 'absolute' }, bottom: 0, width: '100%', zIndex: 2, mt: { xs: 2, lg: 0 }, }}>
+                {/* <Box sx={{ boxShadow: { xs: 3, lg: 1 }, position: { xs: "static", lg: 'absolute' }, bottom: 0, width: '100%', zIndex: 2, mt: { xs: 2, lg: 0 }, }}>
                     <TablePagination
                         sx={{ backgroundColor: 'white' }}
                         component="div"
@@ -136,7 +136,7 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Box>
+                </Box> */}
 
             </Box>
         </Box>

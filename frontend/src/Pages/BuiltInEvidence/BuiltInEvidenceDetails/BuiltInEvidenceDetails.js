@@ -22,6 +22,7 @@ import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+
 const stepperStyle = {
     '& .css-8t49rw-MuiStepConnector-line': { display: 'none' },
     '& .css-14yr603-MuiStepContent-root': { borderLeft: 0 },
@@ -33,9 +34,7 @@ const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickSte
     const [evidenceDetailsData, setEvidenceDetailsData] = useState(null)
 
     useEffect(() => {
-        fetch('./builtInEvidenceDetailsData.json')
-            .then(res => res.json())
-            .then(data => setEvidenceDetailsData(data))
+        
     }, [])
 
     // For Accordion expand------------
@@ -176,20 +175,11 @@ const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickSte
                                                     }}>
                                                         Show more
                                                     </Typography>
-
-
                                                 </Box>
-
-
-
                                             </Box>
                                         </AccordionDetails>
                                     </Accordion>
                                 )}
-
-
-
-
                             </StepContent>
                         </Step>
                     )}

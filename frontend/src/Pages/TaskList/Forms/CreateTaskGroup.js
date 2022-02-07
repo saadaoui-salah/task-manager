@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { CreateTaskGroup } from "../../../api";
+import { useParams } from "react-router-dom";
 
 const style = {
     position: 'absolute',
@@ -23,10 +24,10 @@ const style = {
 
 
 export default function CreateTaskForm(){
-
+    const { id } = useParams()
     const [data, setData] = React.useState({
         name: '',
-        engagment: 100,
+        engagment: id,
     })
 
     const [open, setOpen] = React.useState(false);
@@ -40,7 +41,6 @@ export default function CreateTaskForm(){
     const handleSubmit = async () => {
         if (data.name != ''){
             const response = await CreateTaskGroup(data)
-            console.log(response)
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,13 +16,15 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import { ListEvidence } from '../../../api';
+import { ListContrebuters } from '../../../api';
 
 import jpgIcon from '../../../Images/icons/jpg.png';
 import xlsIcon from '../../../Images/icons/xls.png';
 import pdfIcon from '../../../Images/icons/pdf.png';
 import docIcon from '../../../Images/icons/doc.png';
 import pngIcon from '../../../Images/icons/png.png';
+import { useParams } from 'react-router-dom';
+import { UpdateContrebuter } from '../../../api';
 
 const signOffsSelectStyle = {
     '& .css-1aa5qj0-MuiInputBase-root-MuiInput-root': { fontSize: 13, width: 45, },
@@ -34,25 +36,25 @@ const signOffsSelectStyle = {
 }
 
 
-const EvidenceMainTable = () => {
+const EvidenceMainTable = ({ data }) => {
+    const {id} = useParams()
+    const [contrebuters, setContrebutersList] = useState()
+    const [count, setCount] = useState()
 
-    const createData = (name, calories, fat, carbs, protein) => {
-        return { name, calories, fat, carbs, protein };
+    useEffect(async () => {
+        try {
+            const res = await ListContrebuters(id)
+            setContrebutersList(res.data.contrebuters)
+            setCount(res.data.count)
+        } catch {
+            setContrebutersList([])
+        }
+    }, [])
+
+    const handleOnChange = async (e) => {
+        console.log(e.target.id)
+        const res = UpdateContrebuter({id:e.target.value}, 2)
     }
-
-    let rows = [
-        createData("file.jpg", "red", "fat", "crabs", "protien")
-    ]
-    
-    const [evidenceList, setEvidenceList] = React.useState([]);
-    
-    useEffect(async ()=>{
-        const response = await ListEvidence(1)
-        setEvidenceList(response.data)
-    },[])
-    
-    console.log(evidenceList)
-
     return (
         <Box sx={{
             width: { xs: 280, sm: 'auto', },
@@ -80,90 +82,103 @@ const EvidenceMainTable = () => {
 
 
                     <TableBody>
-                        {true ? evidenceList?.map(evidence => {
-                            const file = evidence.file 
+                        {data != [] ? data?.map(evidence => {
+                            const file = evidence.file
                             return (
-                            <TableRow
-                                key={evidence.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                                        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                                            <img src={
-                                                file.split(".")[1].toLowerCase() === "jpg"
-                                                    ? jpgIcon
-                                                    : file.split(".")[1].toLowerCase() === "xlsx"
-                                                        ? xlsIcon
-                                                        : file.split(".")[1].toLowerCase() === "pdf"
-                                                            ? pdfIcon
-                                                            : file.split(".")[1].toLowerCase() === "docx"
-                                                                ? docIcon
-                                                                : file.split(".")[1].toLowerCase() === "png"
-                                                                && pngIcon
+                                <TableRow
+                                    key={evidence.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                                            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                                                <img src={
+                                                    file.split(".")[1].toLowerCase() === "jpg"
+                                                        ? jpgIcon
+                                                        : file.split(".")[1].toLowerCase() === "xlsx"
+                                                            ? xlsIcon
+                                                            : file.split(".")[1].toLowerCase() === "pdf"
+                                                                ? pdfIcon
+                                                                : file.split(".")[1].toLowerCase() === "docx"
+                                                                    ? docIcon
+                                                                    : file.split(".")[1].toLowerCase() === "png"
+                                                                    && pngIcon
 
-                                            } alt="" style={{ width: '23px' }} />
+                                                } alt="" style={{ width: '23px' }} />
 
-                                            <Typography sx={{ ml: 1 }}>
-                                                {file.split('/')[1]}
-                                            </Typography>
+                                                <Typography sx={{ ml: 1 }}>
+                                                    {file.split('/')[1]}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <MoreHorizIcon sx={{ cursor: 'pointer', }} />
+                                            </Box>
                                         </Box>
-                                        <Box>
-                                            <MoreHorizIcon sx={{ cursor: 'pointer', }} />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <AddCircleOutlineIcon sx={{ fontSize: 30, cursor: 'pointer', }} />
-                                </TableCell>
-                                <TableCell align="center"
-                                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <AddCircleOutlineIcon sx={{ fontSize: 30, cursor: 'pointer', }} />
+                                    </TableCell>
+                                    <TableCell align="center"
+                                        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                                        <Box sx={{ backgroundColor: '#189d3e', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
-                                            P
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                                            <Box sx={{ backgroundColor: '#189d3e', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
+                                                P
+                                            </Box>
+                                            <FormControl fullWidth
+                                                sx={signOffsSelectStyle}>
+                                                <NativeSelect
+                                                    onChange={handleOnChange}
+                                                    disableUnderline
+                                                    inputProps={{
+                                                        name: 'sign-offs',
+                                                        id: 'uncontrolled-native',
+                                                    }}>
+                                                    <option id={evidence.id} value={evidence.preparer__username}>{evidence.preparer__username != null ? evidence.preparer__username.slice(0, 3).toUpperCase() : ''}</option>
+                                                    {contrebuters?.map((contrebuter) => {
+                                                        
+                                                        if (contrebuter.invited_members__is_staff) {
+                                                            return <option id={evidence.id} value={contrebuter.invited_members__id}>{contrebuter.invited_members__username.slice(0, 3).toUpperCase()}</option>
+                                                        }
+                                                    })}
+                                                </NativeSelect>
+                                            </FormControl>
                                         </Box>
-                                        <FormControl fullWidth
-                                            sx={signOffsSelectStyle}>
-                                            <NativeSelect
-                                                disableUnderline
-                                                defaultValue={10}
-                                                inputProps={{
-                                                    name: 'sign-offs',
-                                                    id: 'uncontrolled-native',
-                                                }}>
-                                                <option value={10}>{evidence.preparer__username.slice(0,3).toUpperCase}</option>
-                                            </NativeSelect>
-                                        </FormControl>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                                        <Box sx={{ backgroundColor: '#eb4f00', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
-                                            R
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                                            <Box sx={{ backgroundColor: '#eb4f00', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
+                                                R
+                                            </Box>
+                                            <FormControl fullWidth
+                                                sx={signOffsSelectStyle}>
+                                                <NativeSelect
+                                                    onChange={handleOnChange}
+                                                    disableUnderline
+                                                    defaultValue={10}
+                                                    inputProps={{
+                                                        name: 'sign-offs',
+                                                        id: 'uncontrolled-native',
+                                                    }}>
+                                                    <option value={evidence.reviewer__username}>{evidence.reviewer__username != null ? evidence.reviewer__username.slice(0, 3).toUpperCase : ''}</option>
+                                                    {contrebuters?.map((contrebuter) => {
+                                                        if (!contrebuter.invited_members__is_staff) {
+                                                            return <option value={contrebuter.invited_members__id}>{contrebuter.invited_members__username.slice(0, 3).toUpperCase()}</option>
+                                                        }
+                                                    })}
+                                                </NativeSelect>
+                                            </FormControl>
                                         </Box>
-                                        <FormControl fullWidth
-                                            sx={signOffsSelectStyle}>
-                                            <NativeSelect
-                                                disableUnderline
-                                                defaultValue={10}
-                                                inputProps={{
-                                                    name: 'sign-offs',
-                                                    id: 'uncontrolled-native',
-                                                }}>
-                                                    <option value={10}>{evidence.reviewer__username.slice(0,3).toUpperCase}</option>
-                                            </NativeSelect>
-                                        </FormControl>
-                                    </Box>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Box sx={{
-                                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
-                                    }}>
-                                        <AssignmentTurnedInIcon />
-                                        {12}
-                                    </Box>
-                                </TableCell>
-                            </TableRow>
-                        )}) : ''}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Box sx={{
+                                            display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
+                                        }}>
+                                            <AssignmentTurnedInIcon />
+                                            {count}
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        }) : ''}
                     </TableBody>
 
                 </Table>

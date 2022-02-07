@@ -14,17 +14,25 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import EvidenceMainTable from './EvidenceMainTable/EvidenceMainTable';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { ListEvidence } from '../../api';
 
 const Evidence = () => {
-
+    const [evidenceList, setEvidenceList] = React.useState([])
     const navigate = useNavigate();
-
+    const { id } = useParams()
     React.useEffect(() => {
         if (localStorage.getItem('token') === null) {
             navigate("/login");
         }
     }, [localStorage.getItem('token')]);
+    
+    React.useEffect( async () => {
+        const response = await ListEvidence(id)
+        if (response.data != ''){
+            setEvidenceList(response.data)
+        }
+    }, []);
 
     // For Table Pagination on the third header-------
     const [page, setPage] = React.useState(2);
@@ -61,7 +69,7 @@ const Evidence = () => {
                                 sx={{ textTransform: 'capitalize', pr: { xs: 4, sm: 6 } }}
                                 style={{ color: 'white', fontWeight: 700, fontSize: 17, }} />
 
-                            <Badge badgeContent={4}
+                            <Badge badgeContent={evidenceList.length}
                                 sx={{
                                     '& .MuiBadge-badge': {
                                         backgroundColor: 'white', color: '#2e2e38',
@@ -116,13 +124,9 @@ const Evidence = () => {
 
             <Box sx={{ mt: { xs: 2, sm: 3 } }}>
 
-                <EvidenceMainTable />
+                <EvidenceMainTable data={evidenceList}/>
 
             </Box>
-
-
-
-
         </Box>
     );
 };

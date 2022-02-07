@@ -41,9 +41,11 @@ const CreateEngagements = () => {
     const [members, setMembers] = React.useState([])
     async function handleSubmit(e) {
         e.preventDefault();
-        const response = await CreateEngagment(data);
-        if (response.created) {
-            navigate("/all-engagements")
+        if (data.name != '' && data.report_date != '' && data.invited_members.length > 0){
+            const response = await CreateEngagment(data);
+            if (response.created) {
+                navigate(`engagement/${response.id}/task-list`)
+            }
         }
     }
     const addMember = () => {
@@ -94,7 +96,7 @@ const CreateEngagements = () => {
                     sx={{
                         '& .css-au3a9q-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': { color: '#2e2e38', },
                         '& .css-10i04qz-MuiInputBase-root-MuiFilledInput-root:after': { borderBottom: '2px solid #2e2e38' }, mr: { xs: 0, sm: 3, lg: 10 }
-                    }}
+                    }} required={true}
                     fullWidth id="filled-basic" label="Engagement Name" variant="filled" />
 
 

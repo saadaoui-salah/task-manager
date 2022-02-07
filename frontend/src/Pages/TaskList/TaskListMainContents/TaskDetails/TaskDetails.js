@@ -21,7 +21,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const TaskDetails = ({ taskDetails }) => {
     console.log(taskDetails)
-    const { id, title, completed, description, date } = taskDetails[0];
+    const { id, title, completed, description, date, prefix } = taskDetails[0];
     const [showExtraDescription, setShowExtraDescription] = useState(false)
     const [discriptionEdit, setDiscriptionEdit] = useState(false)
     const [discriptionUpdate, setDiscriptionUpdate] = useState(false)
@@ -52,8 +52,8 @@ const TaskDetails = ({ taskDetails }) => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', }}>
                     <CircleOutlinedIcon sx={{ color: '#00753a', fontSize: 25, mr: 0.4 }} />
-                    <Typography sx={{ fontWeight: 700, fontSize: 18 }}>{title} | </Typography>
-                    <Typography sx={{ fontSize: 18, ml: 1, textAlign: 'left' }}>{description.slice(0, 50)}</Typography>
+                    <Typography sx={{ fontWeight: 700, fontSize: 18 }}>{prefix} | </Typography>
+                    <Typography sx={{ fontSize: 18, ml: 1, textAlign: 'left' }}>{title}</Typography>
                 </Box>
                 <MoreHorizIcon sx={{ cursor: 'pointer' }} />
             </Box>
@@ -120,7 +120,7 @@ const TaskDetails = ({ taskDetails }) => {
 
 
             <Box>
-                <TaskDetailsEvidence />
+                <TaskDetailsEvidence taskID={id} />
             </Box>
 
         </Box >

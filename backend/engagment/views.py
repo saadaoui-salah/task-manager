@@ -31,6 +31,6 @@ class CreateEngagmentApiView(APIView):
             )
             engagment.invited_members.set(request.data['invited_members'])
             serializer = EngagmentListSerializer(engagment)
-            return Response({'created':True, 'data': serializer.data, 'error': ''})
+            return Response({'created':True, 'id': serializer.data['id'], 'error': ''})
         except Exception as e:
             return Response({'created':False, 'data': {}, 'error': e})

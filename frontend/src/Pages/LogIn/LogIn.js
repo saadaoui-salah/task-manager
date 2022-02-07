@@ -21,7 +21,7 @@ const LogIn = () => {
     const navigate = useNavigate()
     useEffect(()=>{
         if (localStorage.getItem('token') != null ){
-            navigate("/task-list")
+            navigate("/all-engagements")
         }
     },[localStorage.getItem('token')])
 
@@ -63,7 +63,7 @@ const LogIn = () => {
             localStorage.setItem('token', result.token)
             setError('')
             setIsloading(false)
-            navigate("/task-list")
+            navigate("/all-engagements")
         }
     }
 

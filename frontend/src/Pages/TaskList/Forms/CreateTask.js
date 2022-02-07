@@ -15,8 +15,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import {CreateTask, ListTaskGroups} from '../../../api';
-
+import { CreateTask, ListTaskGroups } from '../../../api';
 
 const style = {
     position: 'absolute',
@@ -29,20 +28,15 @@ const style = {
     boxShadow: 24, pt: { xs: 40, sm: 0 }
 };
 
-const stepperStyle = {
-    '& .css-8t49rw-MuiStepConnector-line': { display: 'none' },
-    '& .css-14yr603-MuiStepContent-root': { borderLeft: 0 },
-    '& .css-vnkopk-MuiStepLabel-iconContainer': { display: 'none' },
-}
-
 export default function CreateTaskForm() {
     const [groupList, setGroupList] = React.useState([])
 
-    useEffect( async ()=>{
+
+    useEffect(async () => {
         const response = await ListTaskGroups(102)
         setGroupList(response.data)
-    },[])
-    
+    }, [])
+
 
     const [data, setData] = React.useState({
         prefix: '',
@@ -59,21 +53,21 @@ export default function CreateTaskForm() {
     const [progress, setProgress] = React.useState(0);
 
     const handlePrefixOnChange = (e) => {
-        setData({...data, prefix: e.target.value})
+        setData({ ...data, prefix: e.target.value })
     }
     const handleTitleOnChange = (e) => {
-        setData({...data, title: e.target.value})
+        setData({ ...data, title: e.target.value })
     }
     const handleTaskGroupOnChange = (e) => {
-        setData({...data, task_group: e.target.value})
+        setData({ ...data, task_group: e.target.value })
     }
     const handleDescriptionOnChange = (e) => {
-        setData({...data, description: e.target.value})
+        setData({ ...data, description: e.target.value })
     }
     const handleSubmit = async (e) => {
-        if (data.prefix != '' && data.title != '' && data.task_group != '' && data.description != ''){
+        if (data.prefix != '' && data.title != '' && data.task_group != '' && data.description != '') {
             const response = await CreateTask(data)
-            if (response.created){
+            if (response.created) {
                 setData({
                     prefix: '',
                     title: '',
@@ -168,7 +162,7 @@ export default function CreateTaskForm() {
                                 >
                                     {groupList?.map(group => {
                                         return (
-                                        <MenuItem value={group.id}>{group.name}</MenuItem>
+                                            <MenuItem value={group.id}>{group.name}</MenuItem>
                                         )
                                     })}
                                 </Select>

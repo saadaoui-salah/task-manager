@@ -24,21 +24,14 @@ class Task(models.Model):
     
 
 class UploadedEvidence(models.Model):
-    engagment = models.ForeignKey('engagment.Engagment', on_delete=models.CASCADE)
-    name     = models.CharField(max_length=100)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     file     = models.FileField(upload_to="tasks_files", max_length=100) 
-    note     = models.TextField()
-    preparer = models.ForeignKey(User, related_name="uploaded_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
-    reviewer = models.ForeignKey(User, related_name="uploaded_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, on_delete=models.CASCADE)
+    note     = models.TextField(null=True, blank=True)
+    preparer = models.ForeignKey(User, related_name="uploaded_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, null=True, blank=True, on_delete=models.CASCADE) 
+    reviewer = models.ForeignKey(User, related_name="uploaded_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, null=True, blank=True, on_delete=models.CASCADE)
 
 class BuildinEvidence(models.Model):
-    name     = models.CharField(max_length=50)   
-    engagment = models.ForeignKey('engagment.Engagment', on_delete=models.CASCADE)
-    content   = models.TextField()
-    preparer = models.ForeignKey(User, related_name="buildin_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, on_delete=models.CASCADE) 
-    reviewer = models.ForeignKey(User, related_name="buildin_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, on_delete=models.CASCADE)
-
-class Section(models.Model):
-    evidence  = models.ForeignKey(BuildinEvidence, on_delete=models.CASCADE)
-    name      = models.CharField(max_length=100)
-    content   = models.TextField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    file     = models.FileField(upload_to="tasks_files", max_length=100, null=True, blank=True) 
+    preparer = models.ForeignKey(User, related_name="buildin_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, null=True, blank=True, on_delete=models.CASCADE) 
+    reviewer = models.ForeignKey(User, related_name="buildin_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, null=True, blank=True, on_delete=models.CASCADE)

@@ -5,10 +5,10 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
+import { useNavigate } from 'react-router-dom';
 
 const Form = ({user, search, handleSubmit}) => {
-    
+    const navigate = useNavigate()
 
     return (
         <Box>
@@ -70,7 +70,9 @@ const Form = ({user, search, handleSubmit}) => {
 
 
             <Box sx={{ textAlign: 'left', display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-                <Button variant="outlined"
+                <Button 
+                    variant="outlined"
+                    onClick={() => navigate("/all-engagements")}
                     style={{ color: '#2e2e38', borderColor: '#2e2e38', borderRadius: 0 }}
                     sx={{ textTransform: 'Capitalize', px: 6, py: 1.5, fontSize: 16, fontWeight: 700, mr: 2, width: { xs: '100%', md: 'auto' } }}>
                         <ArrowBackIosNewIcon />

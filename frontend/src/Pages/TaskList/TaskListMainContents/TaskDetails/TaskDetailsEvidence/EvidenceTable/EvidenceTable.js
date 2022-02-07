@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -22,6 +22,10 @@ import xlsIcon from '../../../../../../Images/icons/xls.png';
 import pdfIcon from '../../../../../../Images/icons/pdf.png';
 import docIcon from '../../../../../../Images/icons/doc.png';
 import pngIcon from '../../../../../../Images/icons/png.png';
+import { GetEvidenceByTask, ListContrebuters, UpdateContrebuter } from '../../../../../../api';
+import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+
 const signOffsSelectStyle = {
     '& .css-1aa5qj0-MuiInputBase-root-MuiInput-root': { fontSize: 13, width: 45, },
     '& .css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon': {
@@ -31,30 +35,26 @@ const signOffsSelectStyle = {
     '& .css-19ygod6-MuiNativeSelect-select-MuiInputBase-input-MuiInput-input.css-19ygod6-MuiNativeSelect-select-MuiInputBase-input-MuiInput-input.css-19ygod6-MuiNativeSelect-select-MuiInputBase-input-MuiInput-input': { p: 0 }
 }
 
-const EvidenceTable = () => {
-    const createData = (name, calories, fat, carbs, protein) => {
-        return { name, calories, fat, carbs, protein };
-    }
+const EvidenceTable = ({ id }) => {
+    const [evidenceList, setEvidenceList] = React.useState([])
+    useEffect(async () => {
+        const response = await GetEvidenceByTask(id);
+        console.log(response.data)
+        setEvidenceList(response.data);
+    }, [])
+    const {id: evidenceID} = useParams()
+    const [contrebuters, setContrebutersList] = useState()
+    const [count, setCount] = useState()
 
-    const rows = [
-        createData("bookmarks_10_1_21.pdf", ' ', 6.0, 21,),
-        createData("bookmarks_11_5_21.pdf", ' ', 6.0, 14,),
-        createData("Hsc syllabus.pdf", ' ', 6.0, 25,),
-        createData("bookmarks_11_28_21.xlsx", ' ', 6.0, 1,),
-        createData("Buyer List.pdf", ' ', 6.0, 5,),
-        createData("Buyer Massage.docx", ' ', 6.0, 29,),
-        createData("Buyer Request Letter 22222.docx", ' ', 6.0, 30,),
-        createData("Buyer address 22222.pdf", ' ', 6.0, 80,),
-        createData("Capture.PNG", ' ', 6.0, 40,),
-        createData("New Microsoft Office Word Document.docx", ' ', 6.0, 23,),
-        createData("১২নং বরকরই ইউনিয়ন.xlsx", ' ', 6.0, 28,),
-        createData("56654.pdf", ' ', 6.0, 10,),
-        createData("At 26-07-2021 New Bookmark.jpg", ' ', 6.0, 28,),
-        createData("bookmarks_5_3_21.png", ' ', 6.0, 30,),
-        createData("bookmarks_6_21_21.pdf", ' ', 6.0, 80,),
-    ];
-
-
+    useEffect(async () => {
+        try {
+            const res = await ListContrebuters(evidenceID)
+            setContrebutersList(res.data.contrebuters)
+            setCount(res.data.count)
+        } catch {
+            setContrebutersList([])
+        }
+    }, [])
     return (
         <Box sx={{ width: { xs: 280, sm: 480, md: 'auto', xl: 'auto' }, overflow: 'auto', mx: 'auto', }}>
             <TableContainer component={Paper} sx={{ backgroundColor: '#f7f7f7' }}>
@@ -79,91 +79,96 @@ const EvidenceTable = () => {
 
 
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                                        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-                                            <img src={
-                                                row.name.split(".")[1].toLowerCase() === "jpg"
-                                                    ? jpgIcon
-                                                    : row.name.split(".")[1].toLowerCase() === "xlsx"
-                                                        ? xlsIcon
-                                                        : row.name.split(".")[1].toLowerCase() === "pdf"
-                                                            ? pdfIcon
-                                                            : row.name.split(".")[1].toLowerCase() === "docx"
-                                                                ? docIcon
-                                                                : row.name.split(".")[1].toLowerCase() === "png"
-                                                                && pngIcon
+                        {evidenceList != [] ? evidenceList?.map((evidence) => {
+                            return (
+                                <TableRow
+                                    key={evidence.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                                            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+                                                <img src={
+                                                    evidence.file.split(".")[1].toLowerCase() === "jpg"
+                                                        ? jpgIcon
+                                                        : evidence.file.split(".")[1].toLowerCase() === "xlsx"
+                                                            ? xlsIcon
+                                                            : evidence.file.split(".")[1].toLowerCase() === "pdf"
+                                                                ? pdfIcon
+                                                                : evidence.file.split(".")[1].toLowerCase() === "docx"
+                                                                    ? docIcon
+                                                                    : evidence.file.split(".")[1].toLowerCase() === "png"
+                                                                    && pngIcon
 
-                                            } alt="" style={{ width: '23px' }} />
+                                                } alt="" style={{ width: '23px' }} />
 
-                                            <Typography sx={{ ml: 1 }}>
-                                                {row.name}
-                                            </Typography>
+                                                <Typography sx={{ ml: 1 }}>
+                                                    {evidence.file.split('/')[1]}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <MoreHorizIcon sx={{ cursor: 'pointer', }} />
+                                            </Box>
                                         </Box>
-                                        <Box>
-                                            <MoreHorizIcon sx={{ cursor: 'pointer', }} />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <AddCircleOutlineIcon sx={{ fontSize: 30, cursor: 'pointer', }} />
-                                </TableCell>
-                                <TableCell align="center"
-                                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <AddCircleOutlineIcon sx={{ fontSize: 30, cursor: 'pointer', }} />
+                                    </TableCell>
+                                    <TableCell align="center"
+                                        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                                        <Box sx={{ backgroundColor: '#189d3e', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
-                                            P
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                                            <Box sx={{ backgroundColor: '#189d3e', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
+                                                P
+                                            </Box>
+                                            <FormControl fullWidth
+                                                sx={signOffsSelectStyle}>
+                                                <NativeSelect
+                                                    disableUnderline
+                                                    defaultValue={evidence.preparer__username}
+                                                    inputProps={{
+                                                        name: 'sign-offs',
+                                                        id: 'uncontrolled-native',
+                                                    }}>
+                                                        {contrebuters != [] ? contrebuters?.map((contrebuter) => (
+                                                            <option  value={contrebuter.id}>{contrebuter?.preparer__username?.slice(0, 3)}</option>
+                                                        )) 
+                                                        : ''}
+                                                </NativeSelect>
+                                            </FormControl>
                                         </Box>
-                                        <FormControl fullWidth
-                                            sx={signOffsSelectStyle}>
-                                            <NativeSelect
-                                                disableUnderline
-                                                defaultValue={10}
-                                                inputProps={{
-                                                    name: 'sign-offs',
-                                                    id: 'uncontrolled-native',
-                                                }}>
-                                                <option value={10}>HUY</option>
-                                                <option value={20}>ML</option>
-                                                <option value={30}>MN</option>
-                                            </NativeSelect>
-                                        </FormControl>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                                        <Box sx={{ backgroundColor: '#eb4f00', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
-                                            R
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                                            <Box sx={{ backgroundColor: '#eb4f00', p: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 25, height: 20, color: 'white', fontWeight: 600, mr: 0.5 }}>
+                                                R
+                                            </Box>
+                                            <FormControl fullWidth
+                                                sx={signOffsSelectStyle}>
+                                                <NativeSelect
+                                                    
+                                                    disableUnderline
+                                                    defaultValue={evidence.reviewer__username}
+                                                    inputProps={{
+                                                        name: 'sign-offs',
+                                                        id: 'uncontrolled-native',
+                                                    }}>
+                                                    <option id={`r-${evidence.id}`} value={10}>{evidence?.reviewer__username?.slice(0, 3)}</option>
+                                                </NativeSelect>
+                                            </FormControl>
                                         </Box>
-                                        <FormControl fullWidth
-                                            sx={signOffsSelectStyle}>
-                                            <NativeSelect
-                                                disableUnderline
-                                                defaultValue={10}
-                                                inputProps={{
-                                                    name: 'sign-offs',
-                                                    id: 'uncontrolled-native',
-                                                }}>
-                                                <option value={10}>LHN</option>
-                                                <option value={20}>NHP</option>
-                                            </NativeSelect>
-                                        </FormControl>
-                                    </Box>
-                                </TableCell>
-                                <TableCell align="center">
-                                    <Box sx={{
-                                        display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
-                                    }}>
-                                        <AssignmentTurnedInIcon />
-                                        {row.carbs}
-                                    </Box>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Box sx={{
+                                            display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
+                                        }}>
+                                            <AssignmentTurnedInIcon />
+                                            <div >
+                                                {count}
+                                            </div>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        }) : ''}
                     </TableBody>
 
                 </Table>

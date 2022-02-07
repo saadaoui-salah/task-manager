@@ -53,6 +53,12 @@ export const GetTask = (taskID) => {
     return Get(`/user/tasks/${taskID}/`) 
 } // done fixed
 
+export const GetEvidenceByTask = (taskID) => {
+    return Get(`/user/tasks/${taskID}/evidence-list/`) 
+} // done fixed
+
+
+
 export const UserSearch = (keyword) => {
     if (keyword){
         return Get(`/user/search/keyword/${keyword}/`) 
@@ -82,4 +88,12 @@ export const CreateTask = (data) => {
 
 export const CreateEvidence = (engagmentID, data) => {
     return Post(data, `/user/engagment/${engagmentID}/evidence/create/`) 
+}
+
+export const ListContrebuters = (engagmentID) => {
+    return Get(`/user/engagment/${engagmentID}/contrebuters/`) 
+}
+
+export const UpdateContrebuter = (data, id) => {
+    return Post(data, `/user/evidence/${id}/contrebuters/update`) 
 }
