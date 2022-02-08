@@ -51,7 +51,7 @@ const TaskListMainContents = () => {
                     {isLoading
                         ? <CircularProgress disableShrink sx={{ mt: 10 }} />
                         : taskDetails &&
-                        <TaskDetails taskDetails={taskDetails} />
+                        <TaskDetails  setIsLoading={setIsLoading}  taskDetails={taskDetails} />
                     }
                 </Grid>
 

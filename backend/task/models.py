@@ -31,7 +31,12 @@ class UploadedEvidence(models.Model):
     reviewer = models.ForeignKey(User, related_name="uploaded_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, null=True, blank=True, on_delete=models.CASCADE)
 
 class BuildinEvidence(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField() 
+
+class Section(models.Model):
+    title = models.CharField(max_length=100)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    file     = models.FileField(upload_to="tasks_files", max_length=100, null=True, blank=True) 
+    evidence = models.ManyToManyField(BuildinEvidence, null=True, blank=True)
     preparer = models.ForeignKey(User, related_name="buildin_evidence_preparer", limit_choices_to={'is_staff':True, 'is_superuser':False}, null=True, blank=True, on_delete=models.CASCADE) 
     reviewer = models.ForeignKey(User, related_name="buildin_evidence_reviewer", limit_choices_to={'is_staff':False, 'is_superuser':True}, null=True, blank=True, on_delete=models.CASCADE)

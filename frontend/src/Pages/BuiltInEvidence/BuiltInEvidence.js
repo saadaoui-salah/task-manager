@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -10,33 +10,119 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SideNavigation from './SideNavigation/SideNavigation';
 import BuiltInEvidenceDetails from './BuiltInEvidenceDetails/BuiltInEvidenceDetails';
-
+import Backdrop from '@mui/material/Backdrop';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import { CreateSection, ListSection } from '../../api';
+import { useParams } from 'react-router-dom';
+import { Button, TextField } from '@mui/material';
 
 const drawerWidth = 240;
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: { xs: 250, sm: 500, md: 600, lg: 700 },
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 0,
+};
+
+
+
+const SectionForm = ({ open, handleClose, setSection, section, contentID }) => {
+    const { id } = useParams()
+    const handleSubmit = async (e) => {
+        const res = await CreateSection({ title: e.target.value }, id)
+        handleClose()
+    }
+
+    return (
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 300,
+            }}
+            sx={{ p: 0 }}
+        >
+            <Fade in={open}>
+                <Box sx={style} >
+                    <Typography id="transition-modal-title" variant="h5" component="h2"
+                        sx={{ textAlign: 'left', backgroundColor: '#2e2e38', color: 'white', p: 2 }}>
+                        Add Section
+                    </Typography>
+                    <Box sx={{ mt: { xs: 0.5, sm: 2 }, p: 2, }}>
+                        <TextField
+                            sx={{
+                                '& .css-au3a9q-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': { color: '#2e2e38', },
+                                '& .css-10i04qz-MuiInputBase-root-MuiFilledInput-root:after': { borderBottom: '2px solid #2e2e38' }, mb: { xs: 6, md: 10 }
+                            }}
+                            fullWidth
+                            id="standard-helperText"
+                            label="Name"
+                            onChange={(e) => setSection({ id: contentID, name: e.target.value, content: [] })}
+                            variant="filled"
+                        />
+
+                        <Divider sx={{ borderColor: '#2e2e38', mb: 3 }} />
+
+
+                        <Box sx={{ textAlign: 'left', display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+                            <Button variant="contained"
+                                onClick={handleSubmit}
+                                style={{ color: 'white', backgroundColor: '#2e2e38', borderRadius: 0 }}
+                                sx={{ textTransform: 'Capitalize', px: 2, py: 1.5, fontSize: 16, fontWeight: 700, width: { xs: '100%', md: 'auto' }, mb: { xs: 1, md: 0 }, mr: { md: 3 } }}>
+                                Add Section
+
+                            </Button>
+
+                            <Button variant="outlined"
+                                style={{ color: '#2e2e38', borderColor: '#2e2e38', borderRadius: 0 }}
+                                sx={{ textTransform: 'Capitalize', px: 3, py: 1.5, fontSize: 16, fontWeight: 700, width: { xs: '100%', md: 'auto' } }}>
+                                Cancle
+                            </Button>
+                        </Box>
+
+                    </Box>
+                </Box>
+            </Fade>
+        </Modal>
+    )
+}
 
 const BuiltInEvidence = (props) => {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    const [mainStepValue, setMainStepValue] = useState(0)
-    const [stepValue, setStepValue] = useState(0)
-    const [detailsOnClickStepValue, setDetailsOnClickStepValue] = useState(0)
+    const [activeSection, setActiveSection] = useState(0)
+    const [activeEvidence, setActiveEvidence] = useState(0)
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    const getLayersStepValue = (mainStep, step) => {
-        // console.log(mainStep)
-        setMainStepValue(mainStep)
-        setStepValue(step)
-    }
 
-    const getDetailsOnClickStepValue = step => {
-        setDetailsOnClickStepValue(step)
-    }
+    const [section, setSection] = useState(undefined)
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+
+    const { id } = useParams()
+    useEffect(async () => {
+        const res = await ListSection(id)
+        setSection(res.data)
+        setActiveSection(res.data[0])
+    }, [])
 
     return (
         <Box sx={{ display: 'flex', mx: 'auto' }} maxWidth="xl">
@@ -87,8 +173,11 @@ const BuiltInEvidence = (props) => {
                     }}
                 >
                     <SideNavigation
-                        detailsOnClickStepValue={detailsOnClickStepValue}
-                        getLayersStepValue={getLayersStepValue} />
+                        active={activeEvidence}
+                        next={setActiveEvidence}
+                        section={section}
+                        setActiveSection={setActiveSection}
+                    />
                 </Drawer>
                 {/* Fot Large Devices */}
                 <Drawer
@@ -104,21 +193,13 @@ const BuiltInEvidence = (props) => {
                     open
                 >
                     <SideNavigation
-                        setDetailsOnClickStepValue={setDetailsOnClickStepValue}
-                        detailsOnClickStepValue={detailsOnClickStepValue}
-                        getLayersStepValue={getLayersStepValue} />
+                        section={section}
+                        active={activeEvidence}
+                        next={setActiveEvidence}
+                        setActiveSection={setActiveSection} />
                 </Drawer>
             </Box>
-
-
-
-
-
-
-
-
-
-
+            <SectionForm open={open} handleClose={handleClose} />
             <Box
                 component="main"
                 sx={{
@@ -129,13 +210,20 @@ const BuiltInEvidence = (props) => {
                     }
                 }}
             >
+                <Button variant="contained"
+                    onClick={handleOpen}
+                    style={{ color: 'white', backgroundColor: '#2e2e38', borderRadius: 0 }}
+                    sx={{ textTransform: 'Capitalize', px: 2, py: 1.5, fontSize: 16, fontWeight: 700, width: { xs: '100%', md: 'auto' }, mb: { xs: 1, md: 0 }, mr: { md: 3 } }}>
+                    Add Section
+                </Button>
                 <Toolbar sx={{ display: { xs: 'block', sm: 'none' } }} />
                 <Toolbar sx={{ display: { xs: 'block', sm: 'none' } }} />
 
                 <BuiltInEvidenceDetails
-                    getDetailsOnClickStepValue={getDetailsOnClickStepValue}
-                    mainStepValue={mainStepValue}
-                    stepValue={stepValue} />
+                    active={activeEvidence}
+                    next={setActiveEvidence}
+                    section={activeSection}
+                />
 
             </Box>
         </Box>

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Task, UploadedEvidence, BuildinEvidence, TaskGroup
+from .models import *
 
 
 class TaskSerializer(ModelSerializer):
@@ -26,4 +26,9 @@ class UploadedEvidenceSerializer(ModelSerializer):
 class BuildinEvidenceSerializer(ModelSerializer):
     class Meta:
         model = BuildinEvidence
+        fields = '__all__'
+
+class SectionSerializer(ModelSerializer):
+    class Meta:
+        model = Section
         fields = '__all__'

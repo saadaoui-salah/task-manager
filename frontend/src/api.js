@@ -57,8 +57,6 @@ export const GetEvidenceByTask = (taskID) => {
     return Get(`/user/tasks/${taskID}/evidence-list/`) 
 } // done fixed
 
-
-
 export const UserSearch = (keyword) => {
     if (keyword){
         return Get(`/user/search/keyword/${keyword}/`) 
@@ -66,7 +64,6 @@ export const UserSearch = (keyword) => {
 } // done fixed
 
 export const CreateEngagment = (data) => {
-    console.log(data)
     return Post(data, '/engagment/create-new-engagment/') 
 } // done fixed
 
@@ -86,8 +83,8 @@ export const CreateTask = (data) => {
     return Post(data, '/user/create-task/') 
 }
 
-export const CreateEvidence = (engagmentID, data) => {
-    return Post(data, `/user/engagment/${engagmentID}/evidence/create/`) 
+export const CreateEvidence = (sectionID, data) => {
+    return Post(data, `/user/section/${sectionID}/evidence/create/`) 
 }
 
 export const ListContrebuters = (engagmentID) => {
@@ -96,4 +93,15 @@ export const ListContrebuters = (engagmentID) => {
 
 export const UpdateContrebuter = (data, id) => {
     return Post(data, `/user/evidence/${id}/contrebuters/update`) 
+}
+export const CreateSection = (data, id) => {
+    return Post(data, `/user/task/${id}/section/`) 
+}
+
+export const ListSection = (id) => {
+    return Get(`/user/task/${id}/section/`) 
+}
+
+export const EvidenceBySection = (id) => {
+    return Get(`/user/section/${id}/evidence/`) 
 }

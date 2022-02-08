@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
+import { EvidenceBySection } from '../../../../api';
 
 
 const steperStyle = {
@@ -55,72 +56,68 @@ const builtInEvidenceDetailsData = [
 ]
  */
 
+const Content = ({ id, next, active }) => {
+    const [evidences, setEvidence] = useState(null)
+    useEffect(async () => {
+        const res = await EvidenceBySection(id)
+        setEvidence(res.data)
+    }, [])
+    return (
+        <>
+            {evidences &&
+                evidences?.map(evidence =>
+                    <Step
+                        onClick={() => next(evidences?.indexOf(evidence))}
+                        key={evidence.id} sx={{
+                            '& .css-14sza3e-MuiStepLabel-root': { padding: 0, cursor: 'pointer' },
+                        }}>
+                        <StepLabel
+                            onClick={() => next(evidences?.indexOf(evidence))}
+                        >
+
+                            <span style={{ color: active === evidences?.indexOf(evidence) ? 'yellow' : '' }}>{evidence.title}</span>
+                        </StepLabel>
+                    </Step>
+                )}
+        </>
+    )
+}
+
 
 const ShowLayers = ({
-    getLayersStepValue,
-    detailsOnClickStepValue,
-    setDetailsOnClickStepValue }) => {
-    const [evidenceDetailsData, setEvidenceDetailsData] = useState(null)
+    active,
+    next,
+    section,
+    setActiveSection }) => {
     const [activeStep, setActiveStep] = useState(0)
     const [mainActiveStep, setMainActiveStep] = useState(0);
 
-    useEffect(() => {
-        fetch('./builtInEvidenceDetailsData.json')
-            .then(res => res.json())
-            .then(data => setEvidenceDetailsData(data))
-    }, [])
-
-    const handleMainStepNext = (stepValue) => {
-        // console.log(stepValue)
-        setMainActiveStep(stepValue);
-        setDetailsOnClickStepValue(0)
-        setActiveStep(0)
-    };
-
-    const hanldeNext = (stepValue) => {
-        setActiveStep(stepValue);
-        setDetailsOnClickStepValue(stepValue)
-    };
-
-    useEffect(() => {
-        getLayersStepValue(mainActiveStep, activeStep)
-    }, [activeStep, mainActiveStep])
-
-
-
+    const handleStep = (data) => {
+        setActiveSection(data)
+        setMainActiveStep(section.indexOf(data))
+    }
     return (
         <Box sx={{ width: '100%', mt: 2 }}>
             <Stepper activeStep={mainActiveStep} orientation="vertical" sx={mainStepperStyle}>
 
 
-                {!evidenceDetailsData
+                {!section
                     ? <Box sx={{ display: 'flex', mx: 'auto', mt: 3 }}>
                         <CircularProgress />
                     </Box>
-                    : evidenceDetailsData.map(detailsData =>
+                    : section.map(detailsData =>
                         <Step key={detailsData.id} sx={{
                             '& .css-14sza3e-MuiStepLabel-root': { padding: 0 },
                         }}>
                             <StepLabel
-                                onClick={() => handleMainStepNext(evidenceDetailsData.indexOf(detailsData))}
+                                onClick={() => handleStep(detailsData)}
                                 sx={{ cursor: 'pointer' }}>
                                 {detailsData.title}
                             </StepLabel>
 
                             <StepContent sx={{ p: 0, ml: -0.1, border: 0 }}>
                                 <Stepper activeStep={activeStep} orientation="vertical" sx={steperStyle}>
-                                    {detailsData.layers &&
-                                        detailsData.layers.map(layer =>
-                                            <Step key={layer} sx={{
-                                                '& .css-14sza3e-MuiStepLabel-root': { padding: 0, cursor: 'pointer' },
-                                            }}>
-                                                <StepLabel
-                                                    onClick={() => hanldeNext(detailsData.layers.indexOf(layer))}>
-
-                                                    {layer}
-                                                </StepLabel>
-                                            </Step>
-                                        )}
+                                    <Content active={active} next={next} id={detailsData.id} next={setActiveStep} />
                                 </Stepper>
                             </StepContent>
                         </Step>)}

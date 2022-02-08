@@ -13,7 +13,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import { GetTask, ListTasks } from '../../../../../api';
 
 
-const Task = ({ taskGroupData, setTaskDetails }) => {
+const Task = ({ taskGroupData, setTaskDetails, isLoading }) => {
     const [tasksList, setTasksList] = React.useState([])
     const { id , name, count } = taskGroupData
     const getTasks = async (e) => {
@@ -21,8 +21,10 @@ const Task = ({ taskGroupData, setTaskDetails }) => {
         setTasksList(response.data)
     }   
     async function setDetails(id){
+        isLoading(true)
         const response = await GetTask(id)
         setTaskDetails(response.data)
+        isLoading(false)
     }
     return (
         <Accordion sx={{ position: 'static' }} >

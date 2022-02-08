@@ -34,10 +34,8 @@ class ListEvidenceByTaskApiView(APIView):
 
     def get(self, request, task_id):
         uploaded_evidence = list(UploadedEvidence.objects.filter(task__id=task_id).values('id','preparer__username','reviewer__username', 'file'))
-        buildin_evidence = list(BuildinEvidence.objects.filter(task__id=task_id).values('id','preparer__username', 'reviewer__username',  'file'))
-        print(buildin_evidence)
         return Response({
-            'data':uploaded_evidence + buildin_evidence , 
+            'data':uploaded_evidence , 
             'error': ''
         })
     
@@ -56,7 +54,6 @@ class CreateTaskGroupApiView(APIView):
             obj.save()
             return Response({'created':True ,'error':''})        
         except Exception as e:
-            print(e)
             return Response({'created':False , 'error':'not validated data'})
 
 
@@ -103,53 +100,6 @@ class UploadEvidenceApiView(APIView):
             return Response({'data':serializer.validated_data, 'error':''})
         return Response({'data':'', 'error':serializer.errors})
 
-class CreateEvidenceApiView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    prempermission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        engagment = Engagment.objects.filter(id=request.data['engagment']).get()
-        preparer = User.objects.filter(id=request.data['preparer']).get()
-        reviewer = User.objects.filter(id=request.data['reviewer']).get()
-        
-        evidence = BuildinEvidence.objects.create(
-            name=request.data['name'],
-            content=request.data['content'],
-            engagment=engagment,
-            preparer=preparer,
-            reviewer=reviewer,
-        )
-        evidence.save()
-        serializer = BuildinEvidenceSerializer(evidence)
-        return Response({'created':True, 'data':serializer.data, 'error':''})
-
-class ListUploadedEvidenceApiView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    prempermission_classes = [IsAuthenticated]
-
-    def post(self, request, task_id):
-        import json
-        task = Task.objects.filter(id=task_id).get()
-        evidence = BuildinEvidence.objects.create(task=task)
-        with open(f"./tasks_files/evidence_{evidence.id}.json","w") as f:
-            f.write(json.dumps(request.data['evidence']))
-        evidence.file = f"./tasks_files/evidence_{evidence.id}.json"
-        return Response({'created':True, 'error':''})
-    
-    def get(self, request, eng_id):
-        try:
-            evidences = BuildinEvidence.objects.filter(task__task_group__engagment__id=eng_id)
-            data = []
-            import json
-            for evidence in evidences:
-                new = {}
-                new['id'] = evidence.id
-                new['evidence'] = json.load(open(f"{settings.BASE_DIR}/{evidence}"))
-                data.append(new)
-            return Response({'data':data, 'error':''})
-        except: 
-            return Response({'data':'', 'error':'bad request'})
-
 
 
 class EvidenceListApiView(APIView):
@@ -164,15 +114,8 @@ class EvidenceListApiView(APIView):
                     'id','preparer__username','reviewer__username', 'file'
                     )
                 )
-        buildin_evidence = list(
-            BuildinEvidence.objects.filter(
-                task__task_group__engagment__id=eng_id
-                ).values(
-                    'id','preparer__username', 'reviewer__username', 'file'
-                    )
-                )
         return Response({
-            'data':uploaded_evidence + buildin_evidence , 
+            'data':uploaded_evidence, 
             'error': ''
             })
 
@@ -193,17 +136,59 @@ class UpdateContrebuterApiView(APIView):
     prempermission_classes = [IsAuthenticated]
     
     def post(self, request, evidence_id):
-        user = User.objects.filter(id=request.data['id']).get()
+        user = User.objects.filter(username=request.data['username']).get()
+        evidence = UploadedEvidence.objects.filter(id=evidence_id).get()
         if user.is_staff:
-            evidence = UploadedEvidence.objects.filter(id=evidence_id).get()
             evidence.preparer = user
             evidence.save()
-            print(evidence.preparer)
             return Response({'updated':True, 'error':''})
         else: 
-            evidence = UploadedEvidence.objects.filter(id=evidence_id).get()
             evidence.reviewer = user
             evidence.save()
-            print(evidence.reviewer)
             return Response({'updated':True, 'error':''})
+        
+class SectionsApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+
+    def get(self, request, task_id):
+        from django.db.models import Count, Q
+        q = Section.objects.values('title', 'id')
+        return Response({'data': q})
+
+    def post(self, request, task_id):
+        try:
+            q = Section.objects.create(
+                title=request.data['title'],
+                task=Task.objects.filter(id=task_id).get()
+                )
+            return Response({'created': True})
+        except:
+            return Response({'created': False})
+
+class EvidenceBySectionsApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+
+    def get(self, request, sec_id):
+        q = BuildinEvidence.objects.filter(section__id=sec_id).values('title', 'id', 'content')
+        return Response({'data': q})
+
+
+class CreateEvidenceApiView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    prempermission_classes = [IsAuthenticated]
+
+    def post(self, request, task_id):
+        try:
+            q = BuildinEvidence.objects.create(
+                title=request.data['title'],
+                content=request.data['content'],
+            )
+            s = Section.objects.filter(task__id=task_id).get()
+            s.evidence.add(q)
+            return Response({'created': True})
+        except:
+            return Response({'created': False})
+
         

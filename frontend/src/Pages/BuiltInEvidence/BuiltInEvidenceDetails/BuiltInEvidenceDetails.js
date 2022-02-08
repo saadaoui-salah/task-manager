@@ -21,6 +21,22 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { CreateEvidence, EvidenceBySection } from '../../../api';
+import { Modal, Fade, Backdrop, Divider } from '@mui/material';
+import { useParams } from 'react-router-dom';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: { xs: 250, sm: 500, md: 600, lg: 700 },
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 0,
+};
+
 
 
 const stepperStyle = {
@@ -29,60 +45,139 @@ const stepperStyle = {
     '& .css-vnkopk-MuiStepLabel-iconContainer': { display: 'none' },
 }
 
+const AddEvidenceForm = ({ open, setOpen }) => {
+    const [data, setData] = useState()
+    const { id } = useParams()
+    const handleSubmit = async () => {
+        const res = await CreateEvidence(id, data)
+    }
+    console.log(open)
+    return (
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={open}
+            onClose={() => setOpen(false)}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 300,
+            }}
+            sx={{ p: 0 }}
+        >
+            <Fade in={open}>
+                <Box sx={style} >
+                    <Typography id="transition-modal-title" variant="h5" component="h2"
+                        sx={{ textAlign: 'left', backgroundColor: '#2e2e38', color: 'white', p: 2 }}>
+                        Add Section
+                    </Typography>
+                    <Box sx={{ mt: { xs: 0.5, sm: 2 }, p: 2, }}>
+                        <TextField
+                            sx={{
+                                '& .css-au3a9q-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': { color: '#2e2e38', },
+                                '& .css-10i04qz-MuiInputBase-root-MuiFilledInput-root:after': { borderBottom: '2px solid #2e2e38' }, mb: { xs: 6, md: 10 }
+                            }}
+                            fullWidth
+                            id="standard-helperText"
+                            label="Title"
+                            onChange={e => setData({ ...data, title: e.target.value })}
+                            variant="filled"
+                        />
+                        <TextField
+                            sx={{
+                                '& .css-au3a9q-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': { color: '#2e2e38', },
+                                '& .css-10i04qz-MuiInputBase-root-MuiFilledInput-root:after': { borderBottom: '2px solid #2e2e38' }, mb: { xs: 6, md: 10 }
+                            }}
+                            id="standard-helperText"
+                            label="content"
+                            multiline
+                            fullWidth
+                            rows="6"
+                            id="standard-multiline-static"
+                            multiline
+                            onChange={e => setData({ ...data, content: e.target.value })}
+                            variant="filled"
+                        />
 
-const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickStepValue }) => {
-    const [evidenceDetailsData, setEvidenceDetailsData] = useState(null)
+                        <Divider sx={{ borderColor: '#2e2e38', mb: 3 }} />
 
-    useEffect(() => {
-        
-    }, [])
 
-    // For Accordion expand------------
-    const handleChange = (panel) => (event, newExpanded) => {
-        getDetailsOnClickStepValue(panel)
-    };
+                        <Box sx={{ textAlign: 'left', display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+                            <Button variant="contained"
+                                onClick={handleSubmit}
+                                style={{ color: 'white', backgroundColor: '#2e2e38', borderRadius: 0 }}
+                                sx={{ textTransform: 'Capitalize', px: 2, py: 1.5, fontSize: 16, fontWeight: 700, width: { xs: '100%', md: 'auto' }, mb: { xs: 1, md: 0 }, mr: { md: 3 } }}>
+                                Add Section
 
+                            </Button>
+
+                            <Button
+                                onClick={() => setOpen(false)}
+                                variant="outlined"
+                                style={{ color: '#2e2e38', borderColor: '#2e2e38', borderRadius: 0 }}
+                                sx={{ textTransform: 'Capitalize', px: 3, py: 1.5, fontSize: 16, fontWeight: 700, width: { xs: '100%', md: 'auto' } }}>
+                                Cancle
+                            </Button>
+                        </Box>
+
+                    </Box>
+                </Box>
+            </Fade>
+        </Modal>
+    )
+}
+
+
+const BuiltInEvidenceDetails = (props) => {
+    const { section, next, active } = props
+    const [evidences, setEvidences] = React.useState()
     // For Delete Menu------
+    const [open_, setOpen] = useState()
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+    const [loading, setLoading] = useState(false)
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-
+    useEffect(async () => {
+        if (section.id != undefined) {
+            setLoading(true)
+            const res = await EvidenceBySection(section.id)
+            setEvidences(res.data)
+            setLoading(false)
+        }
+    }, [section.id])
     return (
         <Box sx={{ maxWidth: '100%' }}>
-            <Stepper activeStep={mainStepValue} orientation="vertical" sx={stepperStyle}>
-
-                {!evidenceDetailsData
-                    ? <Box sx={{ display: 'flex', mx: 'auto', mt: 3 }}>
-                        <CircularProgress />
-                    </Box>
-                    : evidenceDetailsData.map(detailsData =>
-                        <Step key={detailsData.id}>
-                            <StepLabel>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography sx={{ color: '#2e2e38', fontSize: 22, fontWeight: 550 }}>
-                                        {detailsData.title}
-                                    </Typography>
+            <AddEvidenceForm setOpen={setOpen} open={open_} />
+            <Stepper orientation="vertical" sx={stepperStyle}>
+                {
+                    <Step key={section.id}>
+                        <StepLabel >
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Typography sx={{ color: '#2e2e38', fontSize: 22, fontWeight: 550 }}>
+                                    {section.title}
+                                </Typography>
+                                <Button onClick={() => setOpen(true)}>
                                     <IconButton aria-label="add an alarm">
                                         <AddCircleIcon sx={{ fontSize: 28, color: '#2e2e38' }} />
                                     </IconButton>
+                                </Button>
+                            </Box>
+                        </StepLabel>
+                        <StepContent>
+                            {loading ?
+                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <CircularProgress />
                                 </Box>
-                            </StepLabel>
-                            <StepContent>
-
-
-
-
-                                {detailsData.layers.map(layer =>
+                                : evidences?.map(evidence =>
                                     <Accordion
-                                        key={layer}
-                                        expanded={stepValue === detailsData.layers.indexOf(layer)}
-                                        onChange={handleChange(detailsData.layers.indexOf(layer))}
+                                        key={evidence.id}
+                                        onClick={() => next(evidences.indexOf(evidence))}
+                                        expanded={active === evidences.indexOf(evidence)}
                                         sx={{
                                             backgroundColor: '#fafafc',
                                             '& .css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root:hover:not(.Mui-disabled)': { cursor: 'text' },
@@ -95,16 +190,16 @@ const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickSte
                                                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'
                                             }}>
 
-                                                {stepValue !== detailsData.layers.indexOf(layer)
-                                                    ? < AddIcon
+                                                {active === evidences.indexOf(evidence)
+                                                    ? < RemoveIcon
                                                         sx={{ fontSize: 25, mr: 1.5, fontWeight: 550 }} />
-                                                    : < RemoveIcon
+                                                    : < AddIcon
                                                         sx={{ fontSize: 25, mr: 1.5, fontWeight: 550 }} />
                                                 }
 
                                                 <Typography
                                                     sx={{ fontSize: 17, fontWeight: 550 }}>
-                                                    {layer}</Typography>
+                                                    {evidence.title}</Typography>
 
                                                 <Box
                                                     sx={{
@@ -154,6 +249,7 @@ const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickSte
                                                         '& .css-68u1dt-MuiInputBase-root-MuiInput-root:before': { display: 'none' },
                                                         backgroundColor: 'white'
                                                     }}
+                                                    value={evidence.content}
                                                     fullWidth
                                                     rows="13"
                                                     id="standard-multiline-static"
@@ -180,9 +276,9 @@ const BuiltInEvidenceDetails = ({ mainStepValue, stepValue, getDetailsOnClickSte
                                         </AccordionDetails>
                                     </Accordion>
                                 )}
-                            </StepContent>
-                        </Step>
-                    )}
+                        </StepContent>
+                    </Step>
+                }
             </Stepper>
         </Box >
     );

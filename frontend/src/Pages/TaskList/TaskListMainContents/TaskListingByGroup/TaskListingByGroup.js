@@ -19,8 +19,10 @@ const TaskListingByGroup = ({ setTaskDetails, setIsLoading }) => {
     const [taskGroupsList, setTaskGroupsList] = React.useState([])
     const { id } = useParams();
     useEffect(async () => {
+        setIsLoading(true)
         const response = await ListTaskGroups(id)
         setTaskGroupsList(response.data)
+        setIsLoading(false)
     }, [])
 
     // For Changing Tabs----------------------

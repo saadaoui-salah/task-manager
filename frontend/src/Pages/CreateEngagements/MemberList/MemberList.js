@@ -44,7 +44,6 @@ const MemberList = ({members}) => {
                                     </Badge>
                                     <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 3 }}>
                                         {member.name}
-                                        {console.log(member)}
                                     </Typography>
                                 </Box>
                             </TableCell>

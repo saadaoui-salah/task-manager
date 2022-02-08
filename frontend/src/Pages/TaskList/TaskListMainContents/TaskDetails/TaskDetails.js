@@ -20,7 +20,6 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
 const TaskDetails = ({ taskDetails }) => {
-    console.log(taskDetails)
     const { id, title, completed, description, date, prefix } = taskDetails[0];
     const [showExtraDescription, setShowExtraDescription] = useState(false)
     const [discriptionEdit, setDiscriptionEdit] = useState(false)

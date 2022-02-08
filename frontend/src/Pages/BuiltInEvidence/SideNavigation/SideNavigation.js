@@ -21,6 +21,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ShowLayers from './ShowLayers/ShowLayers';
 
 
+
 const signOffsSelectStyle = {
 
     '& .css-1aa5qj0-MuiInputBase-root-MuiInput-root': { fontSize: 13, width: 45, color: 'white' },
@@ -32,9 +33,10 @@ const signOffsSelectStyle = {
 }
 
 const SideNavigation = ({
-    getLayersStepValue,
-    detailsOnClickStepValue,
-    setDetailsOnClickStepValue }) => {
+    active,
+    next,
+    section,
+    setActiveSection }) => {
 
     const [expanded, setExpanded] = React.useState('panel1');
 
@@ -173,9 +175,11 @@ const SideNavigation = ({
 
                     <AccordionDetails>
                         <ShowLayers
-                            setDetailsOnClickStepValue={setDetailsOnClickStepValue}
-                            detailsOnClickStepValue={detailsOnClickStepValue}
-                            getLayersStepValue={getLayersStepValue} />
+                            section={section}
+                            active={active}
+                            next={next}
+                            setActiveSection={setActiveSection}
+                            />
                     </AccordionDetails>
                 </Accordion>
             </List>
